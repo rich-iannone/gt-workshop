@@ -2,10 +2,6 @@
 
 This **gt** workshop will teach you *a lot* about what **gt** can do, and, it'll give you an opportunity to experiment with the package.
 
-All of the workshop content is available on RStudio Cloud:
-
-https://rstudio.cloud/project/1705927
-
 The goal of the workshop is to introduce you to a lot of examples and provide some time to generate some sample tables, learning bit-by-bit as we go.
 
 Each module of the workshop focuses on a different family of functions, with relevant examples and exercises in each. They are all presented here as **R Markdown** (.Rmd) files with one file for each workshop module:
