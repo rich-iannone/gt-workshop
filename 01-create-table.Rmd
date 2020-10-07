@@ -1,0 +1,209 @@
+---
+title: "Creating a Table, Exporting"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(gt)
+library(tidyverse)
+```
+
+
+All **gt** tables begin with a call to `gt()`, where we would supply the input data table (data frame or tibble) and some basic options for creating a stub (`rowname_col`) and row groups (`groupname_col`). We can also introduce a grouped tibble (via **dplyr**’s `group_by()`) for more precise divisions of rows into row groups. 
+
+The `gt_preview()` function is great for getting a nicely-formatted preview of a data table (defaulting to the first 5 rows and the last row).
+
+Finally, sometimes we want to export the table to some format. It could be HTML, it could be RTF... whichever you go with, you can use the `gtsave()` function.
+
+------
+
+### Functions in this module
+
+- `gt()`
+- `gt_preview()`
+- `gtsave()`
+
+------
+
+
+### `gt()`: Create a **gt** table object
+
+``` r
+gt(
+  data,
+  rowname_col = "rowname",
+  groupname_col = dplyr::group_vars(data),
+  rownames_to_stub = FALSE,
+  auto_align = TRUE,
+  id = NULL,
+  row_group.sep = getOption("gt.row_group.sep", " - ")
+)
+```
+
+The `gt()` function creates a **gt** table object when provided with table data. Using this function is the first step in a typical **gt** workflow. Once we have the **gt** table object, we can perform styling transformations before rendering to a display table of various formats.
+
+##### EXAMPLES
+
+The **gt** package contains a few datasets:
+
+- `countrypops` - Yearly populations of countries from 1960 to 2017
+- `sza` - Twice hourly solar zenith angles by month & latitude
+- `gtcars` - Deluxe automobiles from the 2014-2017 period
+- `sp500` - Daily S&P 500 Index data from 1950 to 2015
+- `pizzaplace` - A year of pizza sales from a pizza place
+- `exibble` - A toy example tibble for testing with **gt**: `exibble`
+
+We will use `exibble` *a lot* during this workshop simply because the entire table easily fits on a screen and contains various types of data. It's perfect for examples.
+
+Let's print out `exibble` and see what it looks like:
+
+```{r}
+exibble
+```
+
+Now lets introduce `exibble` to the `gt()` function.
+
+```{r}
+exibble %>% gt()
+```
+
+The above is the basic layout, containing the column labels and the body cells. Numbers are minimally formatted (see the `num` column) but we can apply our own specific formatting (in the next module).
+
+We can modify the layout a bit in the first step and create a stub. A stub is a special column that contains row labels/names. To do this, we supply the name of the column we'd like to use as the stub to the `rowname_col` argument. Conveniently, we have the `"row"` column in `exibble` that's good for this purpose:
+
+```{r}
+exibble %>% gt(rowname_col = "row")
+```
+
+Great! A bit on the *stub*. It doesn't have a column label above it because it's technically not a column (it's the... stub). We can still put a label above it though! That's with the `tab_stubhead()` function (in the next module).
+
+We can do some more structuring. Sets of rows can be grouped, showing a *row group label* above each group. We can do this by using a column containing categorical values (usually grouping labels). Conveniently again, exibble has the `"group"` column. Let's use that in the `rowname_col` argument of `gt()` and see what it looks like:
+
+```{r}
+exibble %>% gt(rowname_col = "row", groupname_col = "group")
+```
+
+Even if rows are in a weird order, **gt** will put the rows in the correct group (but still respect the order of rows).
+
+```{r}
+exibble %>% dplyr::sample_n(size = 8) %>% gt(rowname_col = "row", groupname_col = "group")
+```
+
+Say you have a data frame with row names (like `mtcars`). You can put those row.names in the stub with `rownames_to_stub = TRUE`:
+
+```{r}
+mtcars %>%
+  dplyr::slice_head(n = 10) %>%
+  gt(rownames_to_stub = TRUE)
+```
+
+But if you're into **dplyr** you're probably into `group_by()`-ing and all that jazz. If you have a grouped tibble, you can pass that into `gt()` and it'll know what to do:
+
+```{r}
+exibble %>% 
+  dplyr::group_by(group) %>%
+  gt(rowname_col = "row")
+```
+
+This also works if you have multiple columns grouped. Use `row_group.sep` to specify the separator between labels.
+
+```{r}
+pizzaplace %>% 
+  dplyr::filter(type %in% c("supreme", "veggie")) %>%
+  dplyr::group_by(type, size) %>%
+  dplyr::slice_head(n = 3) %>%
+  gt(row_group.sep = " // ")
+```
+
+------
+
+### `gt_preview()`: Preview a **gt** table object
+
+``` r
+gt_preview(
+  data,
+  top_n = 5,
+  bottom_n = 1,
+  incl_rownums = TRUE
+)
+```
+
+Sometimes you may want to see just a small portion of your input data. We can use `gt_preview()` in place of `gt()` to get the first x rows of data and the last y rows of data (which can be set by the `top_n` and `bottom_n` arguments).
+
+##### EXAMPLES
+
+Use `gtcars` to create a **gt** table preview (with only a few of its columns). You'll see the first five rows and the last row.
+
+```{r}
+gtcars %>%
+  dplyr::select(mfr, model, year) %>%
+  gt_preview()
+```
+
+Don't want to see the row numbers? That's fine, use `incl_rownums = FALSE`.
+
+```{r}
+sp500 %>% 
+  gt_preview(
+    bottom_n = 5,
+    incl_rownums = FALSE
+  )
+```
+
+
+------
+
+### `gtsave()`: Save a **gt** table as a file
+
+``` r
+gtsave(
+  data,
+  filename,
+  path = NULL,
+  ...
+)
+```
+
+The `gtsave()` function makes it easy to save a **gt** table to a file. The function assumes the output file type by the extension provided in the output filename. This will produce either an HTML, PDF, PNG, LaTeX, or RTF file.
+
+##### EXAMPLES
+
+Use `exibble` to create a **gt** table.
+
+```{r}
+gt_tbl <-
+  exibble %>%
+  gt(
+    rowname_col = "row",
+    groupname_col = "group"
+  )
+```
+
+Get an HTML file with inlined CSS (which is necessary for including the table as part of an HTML email in the **blastula** package).
+
+```{r}
+gt_tbl %>% gtsave("tab_1_inlined.html", inline_css = TRUE)
+```
+
+By leaving out the `inline_css` option, we get a more conventional HTML file with embedded CSS styles.
+
+```{r}
+gt_tbl %>% gtsave("tab_1.html")
+```
+
+Get an RTF file by using the .rtf extension in the `filename`.
+
+```{r}
+gt_tbl %>% gtsave("tab_r.rtf")
+```
+
+------
+
+### SUMMARY
+
+1. Want to make a **gt** table? Get your input table in the right form and use `gt()`.
+2. The `gt()` function has a few options for adding group rows and a *stub*.
+3. If you need a quick preview of a table (regardless of the table's size) try `gt_preview()`
+4. You can save a **gt** table in a file with `gtsave()`; trick is to name the file in a supported format (e.g., `"gt_table.rtf"` for an RTF file containing the table).
+

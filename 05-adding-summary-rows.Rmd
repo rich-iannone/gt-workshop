@@ -1,0 +1,192 @@
+---
+title: "Adding Summary Rows"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(gt)
+library(tidyverse)
+```
+
+## Intro
+
+There are two functions that will add rows to a **gt** table: `summary_rows()` and `grand_summary_rows()`. These are useful for adding groupwise and grand summary rows.
+
+------
+
+Functions in this module:
+
+- `summary_rows()`
+- `grand_summary_rows()`
+
+------
+
+
+### `summary_rows()`: Add groupwise summary rows using aggregation functions
+
+``` r
+summary_rows(
+  data,
+  groups = NULL,
+  columns = TRUE,
+  fns,
+  missing_text = "---",
+  formatter = fmt_number,
+  ...
+)
+```
+
+Add summary rows to one or more row groups by using the table data and any suitable aggregation functions.
+
+##### EXAMPLES
+
+Use `exibble` to create a **gt** table with a stub and row groups. Get the sum of the `num` column in both groups.
+
+```{r}
+exibble %>%
+  gt(rowname_col = "row", groupname_col = "group") %>%
+  summary_rows(
+    groups = c("grp_a", "grp_b"), # <- `TRUE` also works to target all groups
+    columns = vars(num),
+    fns = list(sum = ~ sum(., na.rm = TRUE))
+  )
+```
+
+
+Extend the above the example by formatting `num` values and their summary values (adding minimum and maximum summary rows as well).
+
+```{r}
+exibble %>%
+  gt(rowname_col = "row", groupname_col = "group") %>%
+  fmt_number(
+    columns = vars(num),
+    decimals = 1
+  ) %>%
+  summary_rows(
+    groups = TRUE,
+    columns = vars(num),
+    fns = list(
+      sum = ~ sum(., na.rm = TRUE),
+      min = ~ min(., na.rm = TRUE),
+      max = ~ max(., na.rm = TRUE)
+    ),
+    formatter = fmt_number,
+    decimals = 1
+  )
+```
+
+
+Add group summary values for the `currency` column. Use the `fmt_currency()` formatting function and re-use the summary labels (`sum`, `min`, and `max`).
+
+```{r}
+exibble %>%
+  gt(rowname_col = "row", groupname_col = "group") %>%
+  fmt_number(
+    columns = vars(num),
+    decimals = 1
+  ) %>%
+  summary_rows(
+    groups = TRUE,
+    columns = vars(num),
+    fns = list(
+      sum = ~ sum(., na.rm = TRUE),
+      min = ~ min(., na.rm = TRUE),
+      max = ~ max(., na.rm = TRUE)
+    ),
+    formatter = fmt_number,
+    decimals = 1
+  ) %>%
+  fmt_currency(
+    columns = vars(currency),
+    currency = "USD"
+  ) %>%
+  summary_rows(
+    groups = TRUE,
+    columns = vars(currency),
+    fns = list(
+      sum = ~ sum(., na.rm = TRUE),
+      min = ~ min(., na.rm = TRUE),
+      max = ~ max(., na.rm = TRUE)
+    ),
+    formatter = fmt_currency,
+    currency = "USD",
+    missing_text = "" # <- this `missing_text` value replaces the dashes with nothing
+  )
+```
+
+
+Use `sp500` to create a **gt** table with row groups. Create summary rows (`min`, `max`, `avg`) by row group, where each each row group is a week number.
+
+```{r}
+sp500 %>%
+  dplyr::filter(date >= "2015-01-05" & date <="2015-01-16") %>%
+  dplyr::arrange(date) %>%
+  dplyr::mutate(week = paste0("W", strftime(date, format = "%V"))) %>%
+  dplyr::select(-adj_close, -volume) %>%
+  gt(
+    rowname_col = "date",
+    groupname_col = "week"
+  ) %>%
+  fmt_currency(columns = everything()) %>%
+  summary_rows(
+    groups = TRUE,
+    columns = vars(open, high, low, close),
+    fns = list(
+      min = ~min(.),
+      max = ~max(.),
+      avg = ~mean(.)
+    ),
+    formatter = fmt_currency
+  )
+```
+
+------
+
+### `grand_summary_rows()`: Add grand summary rows using aggregation functions
+
+``` r
+grand_summary_rows(
+  data,
+  columns = TRUE,
+  fns,
+  missing_text = "---",
+  formatter = fmt_number,
+  ...
+)
+```
+
+Add grand summary rows to the **gt** table by using applying aggregation functions to the table data. The summary rows incorporate all of the available data, regardless of whether some of the data are part of row groups.
+
+##### EXAMPLE
+
+Use `sp500` to create a **gt** table with row groups. Create grand summary rows (`min`, `max`, `avg`) for the table.
+
+```{r}
+sp500 %>%
+  dplyr::filter(date >= "2015-01-05" & date <="2015-01-16") %>%
+  dplyr::arrange(date) %>%
+  dplyr::mutate(week = paste0("W", strftime(date, format = "%V"))) %>%
+  dplyr::select(-adj_close, -volume) %>%
+  gt(
+    rowname_col = "date",
+    groupname_col = "week"
+  ) %>%
+  fmt_currency(columns = everything()) %>%
+  grand_summary_rows(
+    columns = vars(open, high, low, close),
+    fns = list(
+      min = ~min(.),
+      max = ~max(.),
+      avg = ~mean(.)),
+    formatter = fmt_currency
+  )
+```
+
+------
+
+### SUMMARY
+
+1. The `summary_rows()` and `grand_summary_rows()` functions allow for calculation and insertion of summary rows, either per group or for all rows in the table.
+2. You might call these functions several times to build up summary rows; use the same labels to line up entries across columns.
+3. The functions are not very easy to use, don't feel bad using `?summary_rows` or `?grand_summary_rows` and working from an example.

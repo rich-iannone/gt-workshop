@@ -1,0 +1,608 @@
+---
+title: "Adding or Modifying Parts of a Table"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(gt)
+library(tidyverse)
+```
+
+
+A **gt** table can contain a few useful parts for conveying additional information. These include a header (with a titles and subtitle), a footer (with footnotes and source notes), and additional areas for labels (row group labels, column spanner labels, the stubhead label). We can modify the look of table parts more generally with `tab_options()` and perform styling on targeted table locations with `tab_style()`.
+
+------
+
+### Functions in this module
+
+- `tab_stubhead()`
+- `tab_spanner()`
+- `tab_header()`
+- `tab_source_note()`
+- `tab_footnote()`
+- `tab_style()`
+- `tab_options()`
+
+Helpers for selecting columns:
+
+- `vars()`
+- `contains()`
+- `matches()`
+- `starts_with()`
+- `ends_with()`
+- `everything()`
+
+Helpers for transforming text:
+
+- `md()`
+- `html()`
+
+Helpers for targeting locations:
+
+- `cells_title()`
+- `cells_stubhead()`
+- `cells_column_spanners()`
+- `cells_column_labels()`
+- `cells_row_groups()`
+- `cells_stub()`
+- `cells_body()`
+- `cells_summary()`
+- `cells_grand_summary()`
+
+Helpers for defining styles:
+
+- `cell_text()`
+- `cell_fill()`
+- `cell_borders()`
+
+------
+
+
+### `tab_stubhead()`: Add label text to the stubhead
+
+``` r
+tab_stubhead(
+  data,
+  label
+)
+```
+
+Add a label to the stubhead of a **gt** table. The stubhead is the lone element that is positioned left of the column labels, and above the stub. We have the flexibility to use Markdown formatting for the stubhead label with `md()`. Furthermore, if the table is intended for HTML output, we can use HTML for the stubhead label (with `html()`).
+
+##### EXAMPLE
+
+Use `gtcars` to create a **gt** table. Add a stubhead label to describe what is in the stub.
+
+```{r}
+gtcars %>%
+  dplyr::select(model, year, hp, trq) %>%
+  dplyr::slice(1:5) %>%
+  gt(rowname_col = "model") %>%
+  tab_stubhead(label = "car")
+```
+
+------
+
+### `tab_spanner()`: Add a spanner column label
+
+``` r
+tab_spanner(
+  data,
+  label,
+  columns,
+  gather = TRUE
+)
+```
+
+Set a spanner column label by mapping it to columns already in the table. This label is placed above one or more column labels, spanning the width of those columns and column labels.
+
+With `columns` we can use column names in double quotes (`"<column>"`), in `vars()` (`vars(<column>)`), or, we can use the following **tidyselect** expressions:
+
+- `contains()`: contains a literal string
+- `matches()`: matches a regular expression
+- `starts_with()`: starts with a prefix
+- `ends_with()`: ends with a suffix
+- `everything()`: selects all columns
+
+##### EXAMPLE
+
+Let's use the `gtcars` table, but cut it down to size first:
+
+```{r}
+gtcars_small <- 
+  gtcars %>%
+  dplyr::select(
+    -mfr, -trim, bdy_style, drivetrain,
+    -drivetrain, -trsmn, -ctry_origin
+  ) %>%
+  dplyr::slice(1:8)
+
+gtcars_small
+```
+
+Let's look at the table in **gt** so that we have a point of comparison.
+
+```{r}
+gtcars_small %>% gt(rowname_col = "model")
+```
+
+Use `gtcars` to create a **gt** table; Group several columns related to car performance under a spanner column with the label `performance`.
+
+```{r}
+gtcars_small %>%
+  gt(rowname_col = "model") %>%
+  tab_spanner(
+    label = "performance",
+    columns = vars(hp, hp_rpm, trq, trq_rpm, mpg_c, mpg_h)
+  )
+```
+
+With a few tidyselect statements in `c()`, we can get the same columns.
+
+```{r}
+gtcars_small %>%
+  gt(rowname_col = "model") %>%
+  tab_spanner(
+    label = "performance",
+    columns = c(starts_with("hp"), starts_with("trq"), starts_with("mpg"))
+  )
+```
+
+If we relocate the `"hp"` column to the beginning (i.e., far left), the associated columns are gathered together (because `gather = TRUE`).
+
+```{r}
+gtcars_small %>%
+  dplyr::select(hp, everything()) %>%
+  gt(rowname_col = "model") %>%
+    tab_spanner(
+    label = "performance",
+    columns = vars(hp, hp_rpm, trq, trq_rpm, mpg_c, mpg_h)
+  )
+```
+
+------
+
+### `tab_header()`: Add a table header
+
+``` r
+tab_header(
+  data,
+  title,
+  subtitle = NULL
+)
+```
+
+We can add a table header to the gt table with a title and even a subtitle. A table header is an optional table part that is positioned above the column labels. We have the flexibility to use Markdown or HTML formatting for the header's title and subtitle (with `md()` or `html()`).
+
+##### EXAMPLE
+
+Use `gtcars` to create a **gt** table; add a header part to contain a `title` and `subtitle`.
+
+```{r}
+gtcars %>%
+  dplyr::select(mfr, model, msrp) %>%
+  dplyr::slice(1:5) %>%
+  gt() %>%
+  tab_header(
+    title = md("Data listing from **gtcars**"),
+    subtitle = md("`gtcars` is an R dataset")
+  )
+```
+
+------
+
+### `tab_source_note()`: Add a source note citation
+
+``` r
+tab_source_note(
+  data,
+  source_note
+)
+```
+
+We can add a source note to the footer part of any **gt** table. A source note is useful for citing the data included in the table. Several can be added, simply use multiple calls of `tab_source_note()` and they will be inserted in the order provided. We can use Markdown formatting for the note, or, if the table is intended for HTML output, we can include HTML formatting.
+
+##### EXAMPLE
+
+Use `exibble` to create a **gt** table. Add a source note to the table footer that cites the data source.
+
+```{r}
+exibble %>%
+  gt() %>%
+  tab_source_note(
+    source_note = "The `exibble` dataset is available in the **gt** package."
+  )
+```
+
+------
+
+### `tab_footnote()`: Add a table footnote
+
+``` r
+tab_footnote(
+  data,
+  footnote,
+  locations
+)
+```
+
+The `tab_footnote()` function can make it a painless process to add a footnote to a **gt** table. There are two components to a footnote: (1) a footnote mark that is attached to the targeted cell text, and (2) the footnote text (that starts with the corresponding footnote mark) that is placed in the table's footer area. 
+
+Each call of `tab_footnote()` will add a different note, and one or more cells can be targeted via the location helper (use in `locations`):
+
+- `cells_title()` - target the table title or subtitle
+- `cells_stubhead()` - target the table stubhead cell
+- `cells_column_spanners()` - target the column spanners
+- `cells_column_labels()` - target the column labels
+- `cells_row_groups()` - target row groups
+- `cells_stub()` - target cells in the table stub
+- `cells_body()` - target data cells in the table body
+- `cells_summary()` - target group summary cells
+- `cells_grand_summary()` - target cells in a grand summary
+
+Additionally, we can enclose several `cells_*()` calls within a `list()` if we wish to link the footnote text to different types of locations (e.g., body cells, row group labels, the table title, etc.).
+
+##### EXAMPLE
+
+Use `exibble` to create a **gt** table and then add a footnote to the `fctr` column label explaining what the short form means (`fctr` = 'factor').
+
+```{r}
+exibble %>%
+  gt() %>%
+  tab_footnote(
+    footnote = "This is a factor column.",
+    locations = cells_column_labels(columns = vars(fctr))
+  )
+```
+
+------
+
+### `tab_style()`: Add custom styles to one or more cells
+
+``` r
+tab_style(
+  data,
+  style,
+  locations
+)
+```
+
+With the `tab_style()` function we can target specific cells and apply styles to them. 
+
+This is done with the help of the following functions:
+
+- `cell_text()`
+- `cell_fill()`
+- `cell_borders()`
+
+For `locations` we use the `cells_*()` functions, just like in the `tab_footnote()` function. In the example below, we'll take things a step further with the `cells_body()` function and use a conditional statement in `rows` to target cells based on data.
+
+##### EXAMPLES
+
+Change the font of all body cells in the `exibble` table to `Times New Roman`.
+
+```{r}
+exibble %>%
+  dplyr::select(num, currency) %>%
+  gt() %>%
+  tab_style(
+    style = cell_text(font = "Times New Roman"),
+    locations = cells_body()
+  )
+```
+
+
+Use a font from the Google Fonts service by using the `google_font()` function. Recommendations on some Google fonts can be found by using `info_google_fonts()`.
+
+```{r}
+exibble %>%
+  dplyr::select(num, currency) %>%
+  gt() %>%
+  fmt_currency(columns = vars(currency), currency = "EUR") %>%
+  tab_style(
+    style = cell_text(font = google_font("IBM Plex Sans"), weight = 500),
+    locations = cells_body()
+  )
+```
+
+
+Use `exibble` to create a **gt** table. Add styles that are to be applied to data cells that satisfy a condition (using `tab_style()`).
+
+```{r}
+exibble %>%
+  dplyr::select(num, currency) %>%
+  gt() %>%
+  fmt_number(
+    columns = vars(num, currency),
+    decimals = 1
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "cyan"),
+      cell_text(weight = "bold")
+      ),
+    locations = cells_body(
+      columns = vars(num),
+      rows = num >= 5000
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "#F9E3D6"),
+      cell_text(style = "italic")
+      ),
+    locations = cells_body(
+      columns = vars(currency),
+      rows = currency < 100
+    )
+  )
+```
+
+
+Use `sp500` to create a **gt** table. Color entire rows of cells based on values in a particular column.
+
+```{r}
+sp500 %>%
+  dplyr::filter(
+    date >= "2015-12-01" &
+    date <= "2015-12-15"
+  ) %>%
+  dplyr::select(-c(adj_close, volume)) %>%
+  gt() %>%
+  tab_style(
+    style = cell_fill(color = "lightgreen"),
+    locations = cells_body(
+      rows = close > open)
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "tomato"),
+      cell_text(color = "white")
+      ),
+    locations = cells_body(
+      rows = open > close)
+  )
+```
+
+------
+
+### `tab_options()`: Modify the table output options
+
+``` r
+tab_options(
+  data,
+  container.width = NULL,
+  container.height = NULL,
+  container.overflow.x = NULL,
+  container.overflow.y = NULL,
+  table.width = NULL,
+  table.layout = NULL,
+  table.align = NULL,
+  table.margin.left = NULL,
+  table.margin.right = NULL,
+  table.background.color = NULL,
+  table.additional_css = NULL,
+  table.font.names = NULL,
+  table.font.size = NULL,
+  table.font.weight = NULL,
+  table.font.style = NULL,
+  table.font.color = NULL,
+  table.font.color.light = NULL,
+  table.border.top.style = NULL,
+  table.border.top.width = NULL,
+  table.border.top.color = NULL,
+  table.border.right.style = NULL,
+  table.border.right.width = NULL,
+  table.border.right.color = NULL,
+  table.border.bottom.style = NULL,
+  table.border.bottom.width = NULL,
+  table.border.bottom.color = NULL,
+  table.border.left.style = NULL,
+  table.border.left.width = NULL,
+  table.border.left.color = NULL,
+  heading.background.color = NULL,
+  heading.align = NULL,
+  heading.title.font.size = NULL,
+  heading.title.font.weight = NULL,
+  heading.subtitle.font.size = NULL,
+  heading.subtitle.font.weight = NULL,
+  heading.border.bottom.style = NULL,
+  heading.border.bottom.width = NULL,
+  heading.border.bottom.color = NULL,
+  heading.border.lr.style = NULL,
+  heading.border.lr.width = NULL,
+  heading.border.lr.color = NULL,
+  column_labels.background.color = NULL,
+  column_labels.font.size = NULL,
+  column_labels.font.weight = NULL,
+  column_labels.text_transform = NULL,
+  column_labels.vlines.style = NULL,
+  column_labels.vlines.width = NULL,
+  column_labels.vlines.color = NULL,
+  column_labels.border.top.style = NULL,
+  column_labels.border.top.width = NULL,
+  column_labels.border.top.color = NULL,
+  column_labels.border.bottom.style = NULL,
+  column_labels.border.bottom.width = NULL,
+  column_labels.border.bottom.color = NULL,
+  column_labels.border.lr.style = NULL,
+  column_labels.border.lr.width = NULL,
+  column_labels.border.lr.color = NULL,
+  column_labels.hidden = NULL,
+  row_group.background.color = NULL,
+  row_group.font.size = NULL,
+  row_group.font.weight = NULL,
+  row_group.text_transform = NULL,
+  row_group.padding = NULL,
+  row_group.border.top.style = NULL,
+  row_group.border.top.width = NULL,
+  row_group.border.top.color = NULL,
+  row_group.border.bottom.style = NULL,
+  row_group.border.bottom.width = NULL,
+  row_group.border.bottom.color = NULL,
+  row_group.border.left.style = NULL,
+  row_group.border.left.width = NULL,
+  row_group.border.left.color = NULL,
+  row_group.border.right.style = NULL,
+  row_group.border.right.width = NULL,
+  row_group.border.right.color = NULL,
+  table_body.hlines.style = NULL,
+  table_body.hlines.width = NULL,
+  table_body.hlines.color = NULL,
+  table_body.vlines.style = NULL,
+  table_body.vlines.width = NULL,
+  table_body.vlines.color = NULL,
+  table_body.border.top.style = NULL,
+  table_body.border.top.width = NULL,
+  table_body.border.top.color = NULL,
+  table_body.border.bottom.style = NULL,
+  table_body.border.bottom.width = NULL,
+  table_body.border.bottom.color = NULL,
+  stub.background.color = NULL,
+  stub.font.size = NULL,
+  stub.font.weight = NULL,
+  stub.text_transform = NULL,
+  stub.border.style = NULL,
+  stub.border.width = NULL,
+  stub.border.color = NULL,
+  data_row.padding = NULL,
+  summary_row.background.color = NULL,
+  summary_row.text_transform = NULL,
+  summary_row.padding = NULL,
+  summary_row.border.style = NULL,
+  summary_row.border.width = NULL,
+  summary_row.border.color = NULL,
+  grand_summary_row.background.color = NULL,
+  grand_summary_row.text_transform = NULL,
+  grand_summary_row.padding = NULL,
+  grand_summary_row.border.style = NULL,
+  grand_summary_row.border.width = NULL,
+  grand_summary_row.border.color = NULL,
+  footnotes.background.color = NULL,
+  footnotes.font.size = NULL,
+  footnotes.padding = NULL,
+  footnotes.border.bottom.style = NULL,
+  footnotes.border.bottom.width = NULL,
+  footnotes.border.bottom.color = NULL,
+  footnotes.border.lr.style = NULL,
+  footnotes.border.lr.width = NULL,
+  footnotes.border.lr.color = NULL,
+  footnotes.sep = NULL,
+  footnotes.marks = NULL,
+  source_notes.background.color = NULL,
+  source_notes.font.size = NULL,
+  source_notes.padding = NULL,
+  source_notes.border.bottom.style = NULL,
+  source_notes.border.bottom.width = NULL,
+  source_notes.border.bottom.color = NULL,
+  source_notes.border.lr.style = NULL,
+  source_notes.border.lr.width = NULL,
+  source_notes.border.lr.color = NULL,
+  row.striping.background_color = NULL,
+  row.striping.include_stub = NULL,
+  row.striping.include_table_body = NULL
+)
+```
+
+Modify the options available in a table. These options are named by the components, the subcomponents, and the element that can adjusted. Okay, this function has a really huge set of arguments. Sorry about that. But it's also a good thing! Many little things can be adjusted (and later on) we'll take a look at some shortcuts to common options with the `opt_*()` functions.
+
+##### EXAMPLES
+
+Use `exibble` to create a **gt** table with all the main parts added; we can use this going forward to demo some `tab_options()`.
+
+```{r}
+tab_1 <- 
+  exibble %>%
+  dplyr::select(
+    -c(fctr, date, time, datetime)
+  ) %>%
+  gt(
+    rowname_col = "row",
+    groupname_col = "group"
+  ) %>%
+  tab_header(
+    title = md("Data listing from **exibble**"),
+    subtitle = md("`exibble` is an R dataset")
+  ) %>%
+  fmt_number(columns = vars(num)) %>%
+  fmt_currency(columns = vars(currency)) %>%
+  tab_footnote(
+    footnote = "Using commas for separators.",
+    locations = cells_body(
+      columns = vars(num),
+      rows = num > 1000)
+  ) %>%
+  tab_footnote(
+    footnote = "Using commas for separators.",
+    locations = cells_body(
+      columns = vars(currency),
+      rows = currency > 1000)
+  ) %>%
+  tab_footnote(
+    footnote = "Alphabetical fruit.",
+    locations = cells_column_labels(
+      columns = vars(char))
+  )
+```
+
+
+Modify the table width (with `table.width`) to `100%` (which spans the entire content width area).
+
+```{r}
+tab_1 %>%
+  tab_options(
+    table.width = pct(100) # pct() helper function used here
+  )
+```
+
+
+Modify the table's background color (with `table.background.color`) to be `"lightcyan"`.
+
+```{r}
+tab_1 %>%
+  tab_options(
+    table.background.color = "lightcyan"
+  )
+```
+
+
+Use letters as the glyphs for footnote references (with `footnotes.marks` and the `letters` vector).
+
+```{r}
+tab_1 %>%
+  tab_options(
+    footnotes.marks = letters
+  )
+```
+
+
+Change the padding of data rows to `5px` with `data_row.padding`.
+
+```{r}
+tab_1 %>% 
+  tab_options(data_row.padding = px(5)) # px() helper function used here
+```
+
+
+Reduce the size of the title and the subtitle text (with `heading.title.font.size` and `heading.subtitle.font.size`).
+
+```{r}
+tab_1 %>%
+  tab_options(
+    heading.title.font.size = "small",
+    heading.subtitle.font.size = "small"
+  )
+```
+
+------
+
+### SUMMARY
+
+1. A header can be added to a **gt** table with `tab_header()`; use `md()` to style title/subtitle.
+2. Source notes can be added to the footer of a table with `tab_source_note()`.
+3. Spanner column labels can be placed above selected column labels with `tab_spanner()`.
+4. If you have a stub and want a label above it, use `tab_stubhead()`.
+5. Footnotes can be placed in specific cells (with help from the `cells_*()` functions) using `tab_footnote()`.
+6. The `tab_style()` function helps to style specified cells; use both the `cells_*()` and `cell_*()` functions for targeting and style specification. 
+7. Tons of options that affect the entire table (i.e., not targeted) can be used with `tab_options()`.
