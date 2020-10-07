@@ -9,3 +9,45 @@ library(gt)
 library(tidyverse)
 ```
 
+Final practice session. What a long and winding road it's been.
+
+### **gt** functions from module `05`
+
+- `summary_rows()`
+- `grand_summary_rows()`
+
+### From module `06`
+
+- `opt_footnote_marks()`
+- `opt_row_striping()`
+- `opt_align_table_header()`
+- `opt_all_caps()`
+- `opt_table_lines()`
+- `opt_table_outline()`
+- `opt_table_font()`
+- `opt_css()`
+
+- `google_font()`
+- `default_fonts()`
+
+- `info_google_fonts()`
+
+#### Suggestions for practice
+
+Try out some of the `opt_*()` functions on the table below. Also, set a default table font using `opt_table_font()` and `google_font()`. Use `info_google_fonts()` to get the names of some of Google's Fonts.
+
+```{r}
+exibble %>%
+  gt(rowname_col = "row", groupname_col = "group") %>%
+  tab_header(title = "The title", subtitle = "The subtitle") %>%
+  tab_source_note("A source note.") %>%
+  tab_footnote(
+    footnote = "A footnote",
+    locations = cells_body(columns = 1, rows = 1)
+  ) %>%
+  tab_style(
+    style = cell_fill(color = "#E5873A"),
+    locations = cells_body(columns = vars(char), rows = 1)
+  )
+```
+
