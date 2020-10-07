@@ -9,3 +9,85 @@ library(gt)
 library(tidyverse)
 ```
 
+Practice is good. We learned a great number of functions in modules `01` and `02`. Here they are as a list:
+
+### **gt** functions from module `01`
+
+- `gt()`
+- `gt_preview()`
+- `gtsave()`
+
+### From module `02`
+
+- `tab_stubhead()`
+- `tab_spanner()`
+- `tab_header()`
+- `tab_source_note()`
+- `tab_footnote()`
+- `tab_style()`
+- `tab_options()`
+
+- `vars()`
+- `contains()`
+- `matches()`
+- `starts_with()`
+- `ends_with()`
+- `everything()`
+
+- `md()`
+- `html()`
+
+- `cells_title()`
+- `cells_stubhead()`
+- `cells_column_spanners()`
+- `cells_column_labels()`
+- `cells_row_groups()`
+- `cells_stub()`
+- `cells_body()`
+- `cells_summary()`
+- `cells_grand_summary()`
+
+- `cell_text()`
+- `cell_fill()`
+- `cell_borders()`
+
+That's *a lot*. In a short amount of time we can still get useful practice by trying a few things out.
+
+#### Suggestions for practice
+
+Try modifying this statement several times and see what happens (e.g., leave out the first argument, change values, add a few other args with help from `,<TAB>` after `"group"`).
+
+```{r}
+exibble %>% gt(rowname_col = "row", groupname_col = "group")
+```
+
+How about some table header fun? Try adapting this snippet of code to make a great set of `title` and `subtitle`. Use `md()` to get Markdown in there. Know HTML? Try your hand at some HTML titling with the `html()` helper. Finish it off with a `gtsave()` to your preferred output type.
+
+```{r}
+gtcars %>%
+  dplyr::select(mfr, model, msrp) %>%
+  dplyr::slice(1:5) %>%
+  gt() %>%
+  tab_header(
+    title = "<title>",
+    subtitle = "<subtitle>"
+  )
+```
+
+Make your **gt** table all stylin'! We need to use the combo of `tab_style()`, one or more location helper functions (e.g,. `cells_body()`, `cells_column_labels()`, etc.), and a styling function like `cell_fill()`. Here's an example table with a number of different location types. Try changing the background of different locations.
+
+```{r}
+exibble %>%
+  gt(rowname_col = "row", groupname_col = "group") %>%
+  tab_header(title = "The title", subtitle = "The subtitle") %>%
+  tab_source_note("A source note.") %>%
+  tab_footnote(
+    footnote = "A footnote",
+    locations = cells_body(columns = 1, rows = 1)
+  ) %>%
+  tab_style(
+    style = cell_fill(color = "#E5873A"),
+    locations = cells_body(columns = vars(char), rows = 1)
+  )
+```
+
