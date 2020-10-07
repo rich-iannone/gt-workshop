@@ -1,2 +1,43 @@
-# gt-workshop-2020
-A workshop to learn lots about the gt R package
+## **gt** Workshop 2020!
+
+This **gt** workshop will teach you *a lot* about what **gt** can do, and, it'll give you an opportunity to experiment with the package.
+
+All of the workshop content is available on RStudio Cloud:
+
+https://rstudio.cloud/project/1705927
+
+The goal of the workshop is to introduce you to a lot of examples and provide some time to generate some sample tables, learning bit-by-bit as we go.
+
+Each module of the workshop focuses on a different family of functions, with relevant examples and exercises in each. They are all presented here as **R Markdown** (.Rmd) files with one file for each workshop module:
+
+- `"01-create-table.Rmd"` (The *Create Table* Family of Functions)
+- `"02-create-modify-parts.Rmd"` (The *Create/Modify Parts* Family of Functions)
+
+- `"02z-PRACTICE-01-02.Rmd"` (Practice with functions from modules `01` and `02`)
+
+- `"03-format-data.Rmd"` (The *Format Data* Family of Functions)
+- `"04-modify-columns.Rmd"` (The *Modify Columns* Family of Functions)
+
+- `"04z-PRACTICE-03-04.Rmd"` (Practice with functions from modules `03` and `04`)
+
+- `"05-summaries.Rmd"` (The *Add Rows* Family of Functions)
+- `"06-table_option_functions.Rmd"` (The Family of *Table Option Functions*)
+
+- `"06z-PRACTICE-05-06.Rmd"` (Practice with functions from modules `05` and `06`)
+
+You can navigate to any of these and modify the code within the self-contained **R Markdown** code chunks. Entire **R Markdown** files can be knit to HTML, where a separate window will show the rendered document.
+
+### The **gt** Installation
+
+Normally you would install **gt** on your system by using `install.packages()`:
+
+``` r
+install.packages("gt")
+```
+
+For this workshop, however, we are going to use the development version of **gt** and install it from GitHub with `devtools::install_github()`.
+
+``` r
+devtools::install_github("rstudio/gt")
+```
+
