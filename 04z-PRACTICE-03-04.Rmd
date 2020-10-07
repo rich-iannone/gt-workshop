@@ -9,3 +9,134 @@ library(gt)
 library(tidyverse)
 ```
 
+Practice time again. And practice makes perfect. We covered a lot more **gt** functions.
+
+### **gt** functions from module `03`
+
+- `fmt_number()`
+- `fmt_scientific()`
+- `fmt_percent()`
+- `fmt_currency()`
+- `fmt_date()`
+- `fmt_time()`
+- `fmt_datetime()`
+- `fmt_markdown()`
+- `fmt_missing()`
+- `data_color()`
+
+- `info_locales()`
+- `info_currencies()`
+- `info_date_style()`
+- `info_time_style()`
+- `info_paletteer()`
+
+### From module `04`
+
+- `cols_align()`
+- `cols_label()`
+- `cols_width()`
+- `cols_move()`
+- `cols_hide()`
+- `cols_merge_range()`
+- `cols_merge_uncert()`
+- `cols_merge()`
+
+Formatters (`fmt_*()` + `data_color()`), information functions (`info_*()`), and functions that work with columns (`cols_*()`) were looked at. Below are a few examples that could be tinkered with.
+
+#### Suggestions for practice
+
+The `fmt_number()` function allows us to format numbers. Pretty important as tables often contain a lot of those. There are many, many options for formatting numbers. One suggestion for getting to know `fmt_number()` a bit better is to modify the options given to it. Working with just the `num` column from `exibble` and exposing all of the function's default options, go ahead and change things and run the chunk. 
+
+```{r}
+exibble %>%
+  dplyr::select(num) %>%
+  gt() %>%
+  fmt_number(
+    columns = vars(num),
+    rows = NULL,
+    decimals = 2,
+    n_sigfig = NULL,
+    drop_trailing_zeros = FALSE,
+    drop_trailing_dec_mark = TRUE,
+    use_seps = TRUE,
+    scale_by = 1,
+    suffixing = FALSE,
+    pattern = "{x}",
+    sep_mark = ",",
+    dec_mark = ".",
+    locale = NULL
+  )
+```
+
+
+The `data_color()` function allows us to add color to cells based functions from the **scales** package (`scales::col_quantile()`, `scales::col_bin()`, `scales::col_numeric()`, and `scales::col_factor()`). Try using these different `scales::col_*()` functions, perhaps changing the `palette` and using a non-`NULL` `domain` (hint: should be a vector of length 2). EXTRA CREDIT: Use a `fmt_*()` function that nicely formats these population values.
+
+```{r}
+countrypops %>%
+  dplyr::filter(country_name == "United States") %>%
+  dplyr::select(-contains("code")) %>%
+  tail(10) %>%
+  gt(rowname_col = "year", groupname_col = "country_name") %>%
+  tab_options(column_labels.hidden = TRUE) %>%
+  data_color(
+    columns = vars(population),
+    colors = scales::col_numeric(
+      palette = c(
+        "red", "orange", "green", "blue"),
+      domain = NULL
+    )
+  )
+```
+
+
+Setting column widths can be admittedly confusing. It uses browser logic to great extent and there are really a lot of possible outcomes. Try combinations of setting the overall width (`tab_options(table.width = ...)`) and using the `pct()` and `px()` helpers to define percentage and pixel widths. These interactions are occasionally surprising but there is some helpful documentation on all the interactions at https://github.com/rstudio/gt/blob/master/tests/gt-examples/01-html-script/html-17-table_width_specifications.R.
+
+```{r}
+exibble %>%
+  dplyr::select(
+    num, char, date,
+    datetime, row
+  ) %>%
+  gt() %>%
+  tab_options(table.width = pct(100)) %>%
+  cols_width(
+    vars(num) ~ pct(20),
+    ends_with("r") ~ px(100),
+    starts_with("date") ~ px(200),
+    everything() ~ pct(30)
+  )
+```
+
+
+Lastly, some information might do us good. The information functions (`info_*()`) can provide us with a helpful reference when we need it most.
+
+Many `fmt_*()` functions have a `locale` option for locale-specific formatting. Here is information on which locales are supported:
+
+```{r}
+info_locales()
+```
+
+The `fmt_currency()` function has support for many currencies through its `currency` option. Here is information on which currencies are supported, their codes, and a preview of their formatting:
+
+```{r}
+info_currencies()
+```
+
+The `fmt_date()`, `fmt_time()`, and `fmt_datetime()` functions use numbered styles as a shortcut for specifying date and time styles. A reference for those can be accessed with:
+
+```{r}
+info_date_style()
+```
+
+and
+
+```{r}
+info_time_style()
+```
+
+You may want to use a color palette with `data_color()`. Pretty much every color palette package in R is contained in the **paletteer** package. This info function shows them all in a **gt** table:
+
+```{r}
+info_paletteer()
+```
+
