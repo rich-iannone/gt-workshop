@@ -1,6 +1,8 @@
 ## **gt** Workshop 2020!
 
-This **gt** workshop will teach you *a lot* about what **gt** can do, and, it'll give you an opportunity to experiment with the package.
+This **gt** workshop will teach you *a lot* about what **gt** can do, and, it'll give you an opportunity to experiment with the package. It's available as an RStudio Cloud project, and that makes it easy to get up and running.
+
+https://rstudio.cloud/project/1864185
 
 The goal of the workshop is to introduce you to a lot of examples and provide some time to generate some sample tables, learning bit-by-bit as we go.
 
