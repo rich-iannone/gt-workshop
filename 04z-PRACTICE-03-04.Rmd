@@ -52,7 +52,7 @@ exibble %>%
   dplyr::select(num) %>%
   gt() %>%
   fmt_number(
-    columns = vars(num),
+    columns = num,
     rows = NULL,
     decimals = 2,
     n_sigfig = NULL,
@@ -79,7 +79,7 @@ countrypops %>%
   gt(rowname_col = "year", groupname_col = "country_name") %>%
   tab_options(column_labels.hidden = TRUE) %>%
   data_color(
-    columns = vars(population),
+    columns = population,
     colors = scales::col_numeric(
       palette = c(
         "red", "orange", "green", "blue"),
@@ -100,7 +100,7 @@ exibble %>%
   gt() %>%
   tab_options(table.width = pct(100)) %>%
   cols_width(
-    vars(num) ~ pct(20),
+    num ~ pct(20),
     ends_with("r") ~ px(100),
     starts_with("date") ~ px(200),
     everything() ~ pct(30)

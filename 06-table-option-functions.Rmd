@@ -104,13 +104,13 @@ exibble %>%
   gt(rowname_col = "row", groupname_col = "group") %>%
   summary_rows(
     groups = "grp_a",
-    columns = vars(num, currency),
+    columns = c(num, currency),
     fns = list(
       min = ~min(., na.rm = TRUE),
       max = ~max(., na.rm = TRUE)
     )) %>%
   grand_summary_rows(
-    columns = vars(currency),
+    columns = currency,
     fns = list(
       total = ~sum(., na.rm = TRUE)
     )) %>%
@@ -148,13 +148,13 @@ exibble %>%
   gt(rowname_col = "row", groupname_col = "group") %>%
   summary_rows(
     groups = "grp_a",
-    columns = vars(num, currency),
+    columns = c(num, currency),
     fns = list(
       min = ~min(., na.rm = TRUE),
       max = ~max(., na.rm = TRUE)
     )) %>%
   grand_summary_rows(
-    columns = vars(currency),
+    columns = currency,
     fns = list(
       total = ~sum(., na.rm = TRUE)
     )) %>%
@@ -193,13 +193,13 @@ exibble %>%
   gt(rowname_col = "row", groupname_col = "group") %>%
   summary_rows(
     groups = "grp_a",
-    columns = vars(num, currency),
+    columns = c(num, currency),
     fns = list(
       min = ~min(., na.rm = TRUE),
       max = ~max(., na.rm = TRUE)
     )) %>%
   grand_summary_rows(
-    columns = vars(currency),
+    columns = currency,
     fns = list(
       total = ~sum(., na.rm = TRUE)
     )) %>%
@@ -237,13 +237,13 @@ exibble %>%
   gt(rowname_col = "row", groupname_col = "group") %>%
   summary_rows(
     groups = "grp_a",
-    columns = vars(num, currency),
+    columns = c(num, currency),
     fns = list(
       min = ~min(., na.rm = TRUE),
       max = ~max(., na.rm = TRUE)
     )) %>%
   grand_summary_rows(
-    columns = vars(currency),
+    columns = currency,
     fns = list(
       total = ~sum(., na.rm = TRUE)
     )) %>%
@@ -283,13 +283,13 @@ exibble %>%
   gt(rowname_col = "row", groupname_col = "group") %>%
   summary_rows(
     groups = "grp_a",
-    columns = vars(num, currency),
+    columns = c(num, currency),
     fns = list(
       min = ~min(., na.rm = TRUE),
       max = ~max(., na.rm = TRUE)
     )) %>%
   grand_summary_rows(
-    columns = vars(currency),
+    columns = currency,
     fns = list(
       total = ~sum(., na.rm = TRUE)
     )) %>%
@@ -387,11 +387,11 @@ exibble %>%
   dplyr::select(num, currency) %>%
   gt() %>%
   fmt_currency(
-    columns = vars(currency),
+    columns = currency,
     currency = "HKD"
   ) %>%
   fmt_scientific(
-    columns = vars(num)
+    columns = num
   )
 ```
 
@@ -404,12 +404,10 @@ exibble %>%
   dplyr::select(num, currency) %>%
   gt(id = "one") %>%
   fmt_currency(
-    columns = vars(currency),
+    columns = currency,
     currency = "HKD"
   ) %>%
-  fmt_scientific(
-    columns = vars(num)
-  ) %>%
+  fmt_scientific(columns = num) %>%
   opt_css(
     css = "
   #one .gt_table {

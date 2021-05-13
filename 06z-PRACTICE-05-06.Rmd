@@ -47,7 +47,7 @@ exibble %>%
   ) %>%
   tab_style(
     style = cell_fill(color = "#E5873A"),
-    locations = cells_body(columns = vars(char), rows = 1)
+    locations = cells_body(columns = char, rows = 1)
   )
 ```
 

@@ -53,7 +53,7 @@ countrypops %>%
   gt() %>%
   cols_align(
     align = "left",
-    columns = vars(population)
+    columns = population
   )
 ```
 
@@ -133,10 +133,10 @@ exibble %>%
   ) %>%
   gt() %>%
   cols_width(
-    vars(num) ~ px(150),
+    num ~ px(150),
     ends_with("r") ~ px(100),
     starts_with("date") ~ px(200),
-    TRUE ~ px(60)
+    everything() ~ px(60)
   )
 ```
 
@@ -165,8 +165,8 @@ countrypops %>%
   tail(5) %>%
   gt() %>%
   cols_move(
-    columns = vars(population),
-    after = vars(country_name)
+    columns = population,
+    after = country_name
   )
 ```
 
@@ -192,7 +192,7 @@ countrypops %>%
   dplyr::filter(country_name == "Mongolia") %>%
   tail(5) %>%
   gt() %>%
-  cols_hide(columns = vars(country_code_2, country_code_3))
+  cols_hide(columns = c(country_code_2, country_code_3))
 ```
 
 
@@ -203,11 +203,11 @@ countrypops %>%
   dplyr::filter(country_name == "Mongolia") %>%
   tail(5) %>%
   gt() %>%
-  cols_hide(columns = vars(country_code_3, population)) %>%
+  cols_hide(columns = c(country_code_3, population)) %>%
   tab_footnote(
     footnote = "Population above 3,000,000.",
     locations = cells_body(
-      columns = vars(year),
+      columns = year,
       rows = population > 3000000
     )
   )
@@ -239,8 +239,8 @@ gtcars %>%
   dplyr::slice(1:8) %>%
   gt() %>%
   cols_merge_range(
-    col_begin = vars(mpg_c),
-    col_end = vars(mpg_h)
+    col_begin = mpg_c,
+    col_end = mpg_h
   ) %>%
   cols_label(
     mpg_c = md("*MPG*")
@@ -273,13 +273,13 @@ exibble %>%
   dplyr::slice(1:7) %>%
   gt() %>%
   fmt_number(
-    columns = vars(num),
+    columns = num,
     decimals = 3,
     use_seps = FALSE
   ) %>%
   cols_merge_uncert(
-    col_val = vars(currency),
-    col_uncert = vars(num)
+    col_val = currency,
+    col_uncert = num
   ) %>%
   cols_label(currency = "value + uncert.")
 ```
@@ -309,13 +309,13 @@ sp500 %>%
   dplyr::select(-volume, -adj_close) %>%
   gt() %>%
   cols_merge(
-    columns = vars(open, close),
-    hide_columns = vars(close),
+    columns = c(open, close),
+    hide_columns = close,
     pattern = "{1} - {2}"
   ) %>%
   cols_merge(
-    columns = vars(low, high),
-    hide_columns = vars(high),
+    columns = c(low, high),
+    hide_columns = high,
     pattern = "{1} - {2}"
   ) %>%
   cols_label(
