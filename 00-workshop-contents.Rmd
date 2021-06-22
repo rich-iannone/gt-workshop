@@ -10,16 +10,19 @@ The goal of the workshop is to introduce you to a lot of examples and provide so
 Each module of the workshop focuses on a different family of functions, with relevant examples and exercises in each. They are all presented here as **R Markdown** (.Rmd) files with one file for each workshop module:
 
 - `"01-create-table.Rmd"` (The *Create Table* Family of Functions)
+
 - `"02-create-modify-parts.Rmd"` (The *Create/Modify Parts* Family of Functions)
 
 - `"02z-PRACTICE-01-02.Rmd"` (Practice with examples from modules `01` and `02`)
 
 - `"03-format-data.Rmd"` (The *Format Data* Family of Functions)
+
 - `"04-modify-columns.Rmd"` (The *Modify Columns* Family of Functions)
 
 - `"04z-PRACTICE-03-04.Rmd"` (Practice with examples from modules `03` and `04`)
 
 - `"05-summaries.Rmd"` (The *Add Rows* Family of Functions)
+
 - `"06-table_option_functions.Rmd"` (The Family of *Table Option Functions*)
 
 - `"06z-PRACTICE-05-06.Rmd"` (Practice with examples from modules `05` and `06`)
