@@ -16,9 +16,10 @@ A **gt** table can contain a few useful parts for conveying additional informati
 
 ### Functions in this module
 
+- `tab_header()`
 - `tab_stubhead()`
 - `tab_spanner()`
-- `tab_header()`
+- `tab_row_group()`
 - `tab_source_note()`
 - `tab_footnote()`
 - `tab_style()`
@@ -57,6 +58,34 @@ Helpers for defining styles:
 
 ------
 
+### `tab_header()`: Add a table header
+
+``` r
+tab_header(
+  data,
+  title,
+  subtitle = NULL
+)
+```
+
+We can add a table header to the gt table with a title and even a subtitle. A table header is an optional table part that is positioned above the column labels. We have the flexibility to use Markdown or HTML formatting for the header's title and subtitle (with `md()` or `html()`).
+
+##### EXAMPLE
+
+Use `gtcars` to create a **gt** table; add a header part to contain a `title` and `subtitle`.
+
+```{r}
+gtcars %>%
+  dplyr::select(mfr, model, msrp) %>%
+  dplyr::slice(1:5) %>%
+  gt() %>%
+  tab_header(
+    title = md("Data listing from **gtcars**"),
+    subtitle = md("`gtcars` is an R dataset")
+  )
+```
+
+------
 
 ### `tab_stubhead()`: Add label text to the stubhead
 
@@ -90,6 +119,7 @@ tab_spanner(
   data,
   label,
   columns,
+  id = label,
   gather = TRUE
 )
 ```
@@ -104,7 +134,7 @@ With `columns` we can use column names in double quotes (`"<column>"`), in `c()`
 - `ends_with()`: ends with a suffix
 - `everything()`: selects all columns
 
-##### EXAMPLE
+##### EXAMPLES
 
 Let's use the `gtcars` table, but cut it down to size first:
 
@@ -162,34 +192,26 @@ gtcars_small %>%
 
 ------
 
-### `tab_header()`: Add a table header
+### `tab_row_group()`: Add a row group to a **gt** table
 
 ``` r
-tab_header(
+tab_row_group(
   data,
-  title,
-  subtitle = NULL
+  label,
+  rows,
+  id = label
 )
 ```
 
-We can add a table header to the gt table with a title and even a subtitle. A table header is an optional table part that is positioned above the column labels. We have the flexibility to use Markdown or HTML formatting for the header's title and subtitle (with `md()` or `html()`).
+Create a row group with a collection of rows. This requires specification of the rows to be included, either by supplying row labels, row indices, or through use of a select helper function like `starts_with()`. To modify the order of row groups, use the `row_group_order()` function.
 
-##### EXAMPLE
 
-Use `gtcars` to create a **gt** table; add a header part to contain a `title` and `subtitle`.
+##### EXAMPLES
 
-```{r}
-gtcars %>%
-  dplyr::select(mfr, model, msrp) %>%
-  dplyr::slice(1:5) %>%
-  gt() %>%
-  tab_header(
-    title = md("Data listing from **gtcars**"),
-    subtitle = md("`gtcars` is an R dataset")
-  )
-```
+
 
 ------
+
 
 ### `tab_source_note()`: Add a source note citation
 
