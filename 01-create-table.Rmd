@@ -34,6 +34,7 @@ gt(
   data,
   rowname_col = "rowname",
   groupname_col = dplyr::group_vars(data),
+  caption = NULL,
   rownames_to_stub = FALSE,
   auto_align = TRUE,
   id = NULL,
@@ -196,6 +197,24 @@ Get an RTF file by using the .rtf extension in the `filename`.
 
 ```{r}
 gt_tbl %>% gtsave("tab_r.rtf")
+```
+
+Get a PNG file (essentially a screenshot of the HTML table) by using the .png extension.
+
+```{r}
+gt_tbl %>% gtsave("tab_r.png")
+```
+
+Get a LaTeX table fragment by using the .ltx extension.
+
+```{r}
+gt_tbl %>% gtsave("tab_r.ltx")
+```
+
+If you know about LaTeX, you'll know that you generally need LaTeX packages and `gt_latex_dependencies()` gives us the names of the packages that **gt** needs.
+
+```{r}
+gt::gt_latex_dependencies() %>% cat()
 ```
 
 ------
