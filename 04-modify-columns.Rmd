@@ -24,6 +24,7 @@ The `cols_*()` functions allow for modifications that act on entire columns. Thi
 - `cols_hide()`
 - `cols_merge_range()`
 - `cols_merge_uncert()`
+- `cols_merge_n_pct()`
 - `cols_merge()`
 
 ------
@@ -35,7 +36,7 @@ The `cols_*()` functions allow for modifications that act on entire columns. Thi
 cols_align(
   data,
   align = c("auto", "left", "center", "right"),
-  columns = TRUE
+  columns = everything()
 )
 ```
 
@@ -63,7 +64,7 @@ countrypops %>%
 
 ``` r
 cols_label(
-  data,
+  .data,
   ...,
   .list = list2(...)
 )
@@ -110,7 +111,7 @@ countrypops %>%
 
 ``` r
 cols_width(
-  data,
+  .data,
   ...,
   .list = list2(...)
 )
@@ -123,7 +124,7 @@ defines the target columns and the right-hand side is a single width value in pi
 
 ##### EXAMPLES
 
-Use `exibble` to create a **gt** table. With named arguments in `...`, we can specify the exact widths for table columns (using `TRUE` will capture all remaining columns).
+Use `exibble` to create a **gt** table. With named arguments in `...`, we can specify the exact widths for table columns (using `everything()` will capture all remaining columns).
 
 ```{r}
 exibble %>%
@@ -282,6 +283,60 @@ exibble %>%
     col_uncert = num
   ) %>%
   cols_label(currency = "value + uncert.")
+```
+
+------
+
+### `cols_merge_n_pct()`: Merge two columns to combine counts and percentages
+
+``` r
+cols_merge_uncert(
+  data,
+  col_n,
+  col_pct,
+  autohide = TRUE
+)
+```
+
+The `cols_merge_n_pct()` function is a specialized variant of the `cols_merge()` function. It operates by taking two columns that constitute both a count (`col_n`) and a fraction of the total population (`col_pct`) and merges them into a single column. What results is a column containing both counts and their associated percentages (e.g., `12 (23.2%)`). The column specified in `col_pct` is dropped from the output table.
+
+##### EXAMPLE
+
+Use `pizzaplace` to create a **gt** table that displays the counts and percentages of the top 3 pizzas sold by pizza category in 2015. The `cols_merge_n_pct()` function is used to merge the `n` and `frac` columns (and the `frac` column is formatted using `fmt_percent()`).
+
+```{r}
+pizzaplace %>%
+  dplyr::group_by(name, type, price) %>%
+  dplyr::summarize(
+    n = dplyr::n(),
+    frac = n/nrow(.),
+    .groups = "drop"
+  ) %>%
+  dplyr::arrange(type, dplyr::desc(n)) %>%
+  dplyr::group_by(type) %>%
+  dplyr::slice_head(n = 3) %>%
+  gt(
+    rowname_col = "name",
+    groupname_col = "type"
+  ) %>%
+  fmt_integer(n) %>%
+  fmt_percent(frac) %>%
+  cols_merge_n_pct(
+    col_n = n,
+    col_pct = frac
+  ) %>%
+  fmt_currency(price) %>%
+  cols_label(
+    n = md("*N*<br>(%)"),
+    price = md("Price<br>*(USD)*")
+  ) %>%
+  tab_style(
+    style = cell_text(font = "monospace"),
+    locations = cells_stub()
+  ) %>%
+  tab_stubhead(md("Cat. and  \nPizza Code")) %>%
+  tab_header(title = "Top 3 Pizzas Sold by Category in 2015") %>%
+  tab_options(table.width = px(512))
 ```
 
 ------
