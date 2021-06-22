@@ -9,6 +9,7 @@ library(gt)
 library(tidyverse)
 ```
 
+## Intro
 
 A **gt** table can contain a few useful parts for conveying additional information. These include a header (with a titles and subtitle), a footer (with footnotes and source notes), and additional areas for labels (row group labels, column spanner labels, the stubhead label). We can modify the look of table parts more generally with `tab_options()` and perform styling on targeted table locations with `tab_style()`.
 
