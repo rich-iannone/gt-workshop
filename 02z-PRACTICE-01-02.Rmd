@@ -73,7 +73,7 @@ gtcars %>%
   )
 ```
 
-Make your **gt** table all stylin'! We need to use the combo of `tab_style()`, one or more location helper functions (e.g,. `cells_body()`, `cells_column_labels()`, etc.), and a styling function like `cell_fill()`. Here's an example table with a number of different location types. Try changing the background of different locations.
+Make your **gt** table a bit more stylish. We need to use the combination of `tab_style()`, one or more location helper functions (e.g,. `cells_body()`, `cells_column_labels()`, etc.), and a styling function like `cell_fill()`. Here's an example table with a number of different location types. Try changing the background of different locations.
 
 ```{r}
 exibble %>%
