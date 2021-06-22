@@ -52,20 +52,17 @@ Use `sza` to create a **gt** table, adding three footnotes. Call `opt_footnote_m
 
 ```{r}
 sza %>%
+  dplyr::select(latitude, tst, sza) %>%
+  dplyr::filter(!is.na(sza)) %>%
   dplyr::group_by(latitude, tst) %>%
   dplyr::summarize(
-    SZA.Max = max(sza),
-    SZA.Min = min(sza, na.rm = TRUE)
+    SZA.Max = max(sza, na.rm = TRUE),
+    SZA.Min = min(sza, na.rm = TRUE), .groups = "drop"
   ) %>%
-  dplyr::ungroup() %>%
   dplyr::filter(latitude == 30, !is.infinite(SZA.Min)) %>%
   dplyr::select(-latitude) %>%
   gt(rowname_col = "tst") %>%
   tab_spanner_delim(delim = ".") %>%
-  fmt_missing(
-    columns = everything(),
-    missing_text = "90+"
-  ) %>%
   tab_stubhead("TST") %>%
   tab_footnote(
     footnote = "True solar time.",
