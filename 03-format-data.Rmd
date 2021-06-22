@@ -17,6 +17,7 @@ Columns of data can be formatted with the `fmt_*()` functions. We can specify th
 ### Functions in this module
 
 - `fmt_number()`
+- `fmt_integer()`
 - `fmt_scientific()`
 - `fmt_percent()`
 - `fmt_currency()`
@@ -44,22 +45,38 @@ Information functions:
 fmt_number(
   data,
   columns,
-  rows = NULL,
+  rows = everything(),
   decimals = 2,
   n_sigfig = NULL,
   drop_trailing_zeros = FALSE,
   drop_trailing_dec_mark = TRUE,
   use_seps = TRUE,
+  accounting = FALSE,
   scale_by = 1,
   suffixing = FALSE,
   pattern = "{x}",
   sep_mark = ",",
   dec_mark = ".",
+  force_sign = FALSE,
   locale = NULL
 )
 ```
 
 With numeric values in a **gt** table, we can perform number-based formatting so that the targeted values are rendered with a higher consideration for tabular presentation.
+
+We get a lot of control over numeric formatting with the following options:
+
+- decimals: choice of the number of decimal places, option to drop trailing zeros, and a choice of the decimal symbol
+
+- digit grouping separators: options to enable/disable digit separators and provide a choice of separator symbol
+
+- scaling: we can choose to scale targeted values by a multiplier value
+
+- large-number suffixing: larger figures (thousands, millions, etc.) can be autoscaled and decorated with the appropriate suffixes
+
+- pattern: option to use a text pattern for decoration of the formatted values
+
+- locale-based formatting: providing a locale ID (e.g., `"de"`) will result in number formatting specific to the chosen locale
 
 ##### EXAMPLES
 
@@ -142,14 +159,14 @@ countrypops %>%
   dplyr::arrange(desc(`2015`)) %>%
   gt(rowname_col = "country_code_3") %>%
   fmt_number(
-    columns = 2:9, # <- selecting columns 2 to 9 in *passed in dataset*
+    columns = 2:9, # <- selecting columns 2 to 9 from *passed in dataset*
     decimals = 2,
     suffixing = TRUE
   )
 ```
 
 
-With `exibble` make a simple **gt** table. Format the `num` column as numeric with three decimal places and do this formatting according to the `"fr"` locale.
+With `exibble`, make a simple **gt** table. Format the `num` column as numeric with three decimal places and do this formatting according to the `"fr"` locale.
 
 ```{r}
 exibble %>%
@@ -164,19 +181,54 @@ exibble %>%
 
 ------
 
+### `fmt_integer()`: Format values as integers
+
+``` r
+fmt_number(
+  data,
+  columns,
+  rows = everything(),
+  use_seps = TRUE,
+  accounting = FALSE,
+  scale_by = 1,
+  suffixing = FALSE,
+  pattern = "{x}",
+  sep_mark = ",",
+  force_sign = FALSE,
+  locale = NULL
+)
+```
+
+With numeric values in a **gt** table, we can perform number-based formatting so that the targeted values are always rendered as integer values.
+
+##### EXAMPLE
+
+Use `exibble` to create a **gt** table. Format the `num` column using `fmt_integer()` and its default options.
+
+```{r}
+exibble %>%
+  dplyr::select(num) %>%
+  gt() %>%
+  fmt_integer(columns = num)
+```
+
+
+------
+
 ### `fmt_scientific()`: Format values to scientific notation
 
 ```r
 fmt_scientific(
   data,
   columns,
-  rows = NULL,
+  rows = everything(),
   decimals = 2,
   drop_trailing_zeros = FALSE,
   scale_by = 1,
   pattern = "{x}",
   sep_mark = ",",
   dec_mark = ".",
+  force_sign = FALSE,
   locale = NULL
 )
 ```
@@ -185,24 +237,56 @@ With numeric values in a **gt** table, we can perform formatting so that the tar
 
 ##### EXAMPLE
 
-Use `exibble` to create a **gt** table. Format the `num` column as partially numeric and partially in scientific notation.
+Use `exibble` to create a **gt** table. Format the `num` column as partially in scientific notation (values <=500).
 
 ```{r}
 exibble %>%
+  dplyr::select(num, currency) %>%
   gt() %>%
-  fmt_number(
-    columns = num,
-    rows = num > 500,
-    decimals = 1,
-    scale_by = 1/1000,
-    pattern = "{x}K"
-  ) %>%
   fmt_scientific(
     columns = num,
     rows = num <= 500,
     decimals = 1
   )
 ```
+
+
+------
+
+### `fmt_engineering()`: Format values to engineering notation
+
+``` r
+fmt_engineering(
+  data,
+  columns,
+  rows = everything(),
+  decimals = 2,
+  drop_trailing_zeros = FALSE,
+  scale_by = 1,
+  pattern = "{x}",
+  sep_mark = ",",
+  dec_mark = ".",
+  force_sign = FALSE,
+  locale = NULL
+)
+```
+
+With numeric values in a gt table, we can perform formatting so that the targeted values are rendered in engineering notation.
+
+##### EXAMPLE
+
+Use `exibble` to create a **gt** table. Format the `num` column to be in engineering notation.
+
+```{r}
+exibble %>%
+  dplyr::select(num, currency) %>%
+  gt() %>%
+  fmt_engineering(
+    columns = num,
+    decimals = 2
+  )
+```
+
 
 ------
 
@@ -212,15 +296,17 @@ exibble %>%
 fmt_percent(
   data,
   columns,
-  rows = NULL,
+  rows = everything(),
   decimals = 2,
   drop_trailing_zeros = FALSE,
   drop_trailing_dec_mark = TRUE,
   scale_values = TRUE,
   use_seps = TRUE,
+  accounting = FALSE,
   pattern = "{x}",
   sep_mark = ",",
   dec_mark = ".",
+  force_sign = FALSE,
   incl_space = FALSE,
   placement = "right",
   locale = NULL
@@ -255,18 +341,19 @@ pizzaplace %>%
 fmt_currency(
   data,
   columns,
-  rows = NULL,
+  rows = everything(),
   currency = "USD",
   use_subunits = TRUE,
-  accounting = FALSE,
   decimals = NULL,
   drop_trailing_dec_mark = TRUE,
   use_seps = TRUE,
+  accounting = FALSE,
   scale_by = 1,
   suffixing = FALSE,
   pattern = "{x}",
   sep_mark = ",",
   dec_mark = ".",
+  force_sign = FALSE,
   placement = "left",
   incl_space = FALSE,
   locale = NULL
@@ -313,7 +400,7 @@ exibble %>%
 fmt_date(
   data,
   columns,
-  rows = NULL,
+  rows = everything(),
   date_style = 2
 )
 ```
@@ -361,7 +448,7 @@ exibble %>%
 fmt_time(
   data,
   columns,
-  rows = NULL,
+  rows = everything(),
   time_style = 2
 )
 ```
@@ -409,7 +496,7 @@ exibble %>%
 fmt_datetime(
   data,
   columns,
-  rows = NULL,
+  rows = everything(),
   date_style = 2,
   time_style = 2
 )
@@ -440,7 +527,7 @@ exibble %>%
 fmt_markdown(
   data,
   columns,
-  rows = NULL
+  rows = everything()
 )
 ```
 
@@ -503,7 +590,7 @@ dplyr::tribble(
 fmt_missing(
   data,
   columns,
-  rows = NULL,
+  rows = everything(),
   missing_text = "---"
 )
 ```
@@ -575,7 +662,8 @@ pizzaplace %>%
   dplyr::group_by(type, size) %>%
   dplyr::summarize(
     sold = dplyr::n(),
-    income = sum(price)
+    income = sum(price),
+    .groups = "drop"
   ) %>%
   gt(rowname_col = "size") %>%
   data_color(
