@@ -27,10 +27,12 @@ Important functions in this module:
 - `opt_css()`
 
 Helpers for specifying fonts:
+
 - `google_font()`
 - `default_fonts()`
 
 Information function:
+
 - `info_google_fonts()`
 
 ------
