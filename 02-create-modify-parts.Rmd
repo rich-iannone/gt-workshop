@@ -208,10 +208,57 @@ Create a row group with a collection of rows. This requires specification of the
 
 ##### EXAMPLES
 
+Use `gtcars` to create a **gt** table and add two row groups with the labels: `numbered` and `NA` (a group without a label associated with it)
+
+```{r}
+gtcars %>%
+  dplyr::select(model, year, hp, trq) %>%
+  dplyr::slice(1:8) %>%
+  gt(rowname_col = "model") %>%
+  tab_row_group(
+    label = "numbered",
+    rows = matches("^[0-9]")
+  )
+```
+
+Use `gtcars` to create a **gt** table. Add two row groups with the labels `powerful` and `super powerful`: the distinction is having `hp` lesser or greater than `600`.
+
+```{r}
+gtcars %>%
+  dplyr::select(model, year, hp, trq) %>%
+  dplyr::slice(1:8) %>%
+  gt(rowname_col = "model") %>%
+  tab_row_group(
+    label = "powerful",
+    rows = hp <= 600
+  ) %>%
+  tab_row_group(
+    label = "super powerful",
+    rows = hp > 600
+  )
+```
+
+If the order is not what you want, you can change the calling order of the `tab_row_group()` statements, or, use `row_group_order()` afterward:
+
+```{r}
+gtcars %>%
+  dplyr::select(model, year, hp, trq) %>%
+  dplyr::slice(1:8) %>%
+  gt(rowname_col = "model") %>%
+  tab_row_group(
+    label = "powerful",
+    rows = hp <= 600
+  ) %>%
+  tab_row_group(
+    label = md("**super powerful**"),
+    rows = hp > 600,
+    id = "sp"
+  ) %>%
+  row_group_order(groups = c("powerful", "sp"))
+```
 
 
 ------
-
 
 ### `tab_source_note()`: Add a source note citation
 
