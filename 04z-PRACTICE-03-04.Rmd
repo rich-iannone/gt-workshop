@@ -14,7 +14,9 @@ Practice time again. And practice makes perfect. We covered a lot more **gt** fu
 ### **gt** functions from module `03`
 
 - `fmt_number()`
+- `fmt_integer()`
 - `fmt_scientific()`
+- `fmt_engineering()`
 - `fmt_percent()`
 - `fmt_currency()`
 - `fmt_date()`
@@ -39,6 +41,7 @@ Practice time again. And practice makes perfect. We covered a lot more **gt** fu
 - `cols_hide()`
 - `cols_merge_range()`
 - `cols_merge_uncert()`
+- `cols_merge_n_pct()`
 - `cols_merge()`
 
 Formatters (`fmt_*()` + `data_color()`), information functions (`info_*()`), and functions that work with columns (`cols_*()`) were looked at. Below are a few examples that could be tinkered with.
