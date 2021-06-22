@@ -1,4 +1,4 @@
-## **gt** Workshop 2020!
+## The **gt** Workshop, XXL Size
 
 This **gt** workshop will teach you *a lot* about what **gt** can do, and, it'll give you an opportunity to experiment with the package. It's available as an RStudio Cloud project, and that makes it easy to get up and running.
 
