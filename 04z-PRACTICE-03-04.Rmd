@@ -25,7 +25,6 @@ Practice time again. And practice makes perfect. We covered a lot more **gt** fu
 - `fmt_markdown()`
 - `fmt_missing()`
 - `data_color()`
-
 - `info_locales()`
 - `info_currencies()`
 - `info_date_style()`
