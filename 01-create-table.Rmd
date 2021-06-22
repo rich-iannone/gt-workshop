@@ -185,37 +185,37 @@ gt_tbl <-
 Get an HTML file with inlined CSS (which is necessary for including the table as part of an HTML email in the **blastula** package).
 
 ```{r}
-gt_tbl %>% gtsave("tab_1_inlined.html", inline_css = TRUE)
+#gt_tbl %>% gtsave("tab_1_inlined.html", inline_css = TRUE)
 ```
 
 By leaving out the `inline_css` option, we get a more conventional HTML file with embedded CSS styles.
 
 ```{r}
-gt_tbl %>% gtsave("tab_1.html")
+#gt_tbl %>% gtsave("tab_1.html")
 ```
 
 Get an RTF file by using the .rtf extension in the `filename`.
 
 ```{r}
-gt_tbl %>% gtsave("tab_r.rtf")
+#gt_tbl %>% gtsave("tab_r.rtf")
 ```
 
 Get a PNG file (essentially a screenshot of the HTML table) by using the .png extension.
 
 ```{r}
-gt_tbl %>% gtsave("tab_r.png")
+#gt_tbl %>% gtsave("tab_r.png")
 ```
 
 Get a LaTeX table fragment by using the .ltx extension.
 
 ```{r}
-gt_tbl %>% gtsave("tab_r.ltx")
+#gt_tbl %>% gtsave("tab_r.ltx")
 ```
 
 If you know about LaTeX, you'll know that you generally need LaTeX packages and `gt_latex_dependencies()` gives us the names of the packages that **gt** needs.
 
 ```{r}
-gt::gt_latex_dependencies() %>% cat()
+#gt::gt_latex_dependencies() %>% cat()
 ```
 
 ------
