@@ -9,6 +9,7 @@ library(gt)
 library(tidyverse)
 ```
 
+## Intro
 
 All **gt** tables begin with a call to `gt()`, where we would supply the input data table (data frame or tibble) and some basic options for creating a stub (`rowname_col`) and row groups (`groupname_col`). We can also introduce a grouped tibble (via **dplyr**’s `group_by()`) for more precise divisions of rows into row groups. 
 
