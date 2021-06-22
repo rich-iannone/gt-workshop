@@ -9,6 +9,7 @@ library(gt)
 library(tidyverse)
 ```
 
+## Intro
 
 Columns of data can be formatted with the `fmt_*()` functions. We can specify the rows of these columns quite precisely with the `rows` argument. We get to apply these functions exactly once to each data cell (last call wins). Need to do custom formatting? Use the `fmt()` function and define your own formatter within (or, create a wrapper with `fmt()` if you prefer). The `text_transform()` function allows for post-processing of any data, and we provide a function for that transformation.
 
