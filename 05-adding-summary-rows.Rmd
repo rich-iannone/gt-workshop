@@ -29,7 +29,7 @@ Functions in this module:
 summary_rows(
   data,
   groups = NULL,
-  columns = TRUE,
+  columns = everything(),
   fns,
   missing_text = "---",
   formatter = fmt_number,
@@ -148,7 +148,7 @@ sp500 %>%
 ``` r
 grand_summary_rows(
   data,
-  columns = TRUE,
+  columns = everything(),
   fns,
   missing_text = "---",
   formatter = fmt_number,
