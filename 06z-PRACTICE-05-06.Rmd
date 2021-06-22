@@ -26,10 +26,8 @@ Final practice session. What a long and winding road it's been.
 - `opt_table_outline()`
 - `opt_table_font()`
 - `opt_css()`
-
 - `google_font()`
 - `default_fonts()`
-
 - `info_google_fonts()`
 
 #### Suggestions for practice
