@@ -39,7 +39,7 @@ Helpers for transforming text:
 - `md()`
 - `html()`
 
-Helpers for targeting locations:
+Helpers for targeting locations (for `tab_footnote()` and `tab_style()`):
 
 - `cells_title()`
 - `cells_stubhead()`
@@ -51,7 +51,7 @@ Helpers for targeting locations:
 - `cells_summary()`
 - `cells_grand_summary()`
 
-Helpers for defining styles:
+Helpers for defining styles (for `tab_style()`):
 
 - `cell_text()`
 - `cell_fill()`
