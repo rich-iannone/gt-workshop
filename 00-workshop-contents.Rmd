@@ -29,9 +29,9 @@ Each module of the workshop focuses on a different family of functions, with rel
 
 You can navigate to any of these and modify the code within the self-contained **R Markdown** code chunks. Entire **R Markdown** files can be knit to HTML, where a separate window will show the rendered document.
 
-### The **gt** Installation
+### Installing **gt**
 
-Normally you would install **gt** on your system by using `install.packages()`:
+You can install **gt** on your system by using `install.packages()`:
 
 ```{r eval=FALSE}
 # install.packages("gt")
