@@ -47,11 +47,11 @@ The individual alignments of columns (which includes the column labels and all o
 Use `countrypops` to create a **gt** table. Align the `population` column data to the left.
 
 ```{r}
-countrypops %>%
-  dplyr::select(-contains("code")) %>%
-  dplyr::filter(country_name == "Mongolia") %>%
-  tail(5) %>%
-  gt() %>%
+countrypops |>
+  dplyr::select(-contains("code")) |>
+  dplyr::filter(country_name == "Mongolia") |>
+  tail(5) |>
+  gt() |>
   cols_align(
     align = "left",
     columns = population
@@ -77,11 +77,11 @@ Column labels can be modified from their default values (the names of the column
 Use `countrypops` to create a **gt** table; label all the table's columns to present better.
 
 ```{r}
-countrypops %>%
-  dplyr::select(-contains("code")) %>%
-  dplyr::filter(country_name == "Mongolia") %>%
-  tail(5) %>%
-  gt() %>%
+countrypops |>
+  dplyr::select(-contains("code")) |>
+  dplyr::filter(country_name == "Mongolia") |>
+  tail(5) |>
+  gt() |>
   cols_label(
     country_name = "Name",
     year = "Year",
@@ -93,15 +93,16 @@ countrypops %>%
 Use `countrypops` to create a **gt** table; label columns as before but make them bold with markdown formatting.
 
 ```{r}
-countrypops %>%
-  dplyr::select(-contains("code")) %>%
-  dplyr::filter(country_name == "Mongolia") %>%
-  tail(5) %>%
-  gt() %>%
+countrypops |>
+  dplyr::select(-contains("code")) |>
+  dplyr::filter(country_name == "Mongolia") |>
+  tail(5) |>
+  gt() |>
   cols_label(
-    country_name = md("**Name**"),
-    year = md("**Year**"),
-    population = md("**Population**")
+    country_name = "**Name**",
+    year = "**Year**",
+    population = "**Population**",
+    .fn = md
   )
 ```
 
@@ -127,12 +128,9 @@ defines the target columns and the right-hand side is a single width value in pi
 Use `exibble` to create a **gt** table. With named arguments in `...`, we can specify the exact widths for table columns (using `everything()` will capture all remaining columns).
 
 ```{r}
-exibble %>%
-  dplyr::select(
-    num, char, date,
-    datetime, row
-  ) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(num, char, date, datetime, row) |>
+  gt() |>
   cols_width(
     num ~ px(150),
     ends_with("r") ~ px(100),
@@ -160,11 +158,11 @@ On those occasions where you need to move columns this way or that way, we can m
 Use `countrypops` to create a **gt** table; With the remaining columns, position `population` after `country_name`.
 
 ```{r}
-countrypops %>%
-  dplyr::select(-contains("code")) %>%
-  dplyr::filter(country_name == "Mongolia") %>%
-  tail(5) %>%
-  gt() %>%
+countrypops |>
+  dplyr::select(-contains("code")) |>
+  dplyr::filter(country_name == "Mongolia") |>
+  tail(5) |>
+  gt() |>
   cols_move(
     columns = population,
     after = country_name
@@ -189,10 +187,10 @@ The `cols_hide()` function allows us to hide one or more columns from appearing 
 Use `countrypops` to create a **gt** table; Hide the columns `country_code_2` and `country_code_3`.
 
 ```{r}
-countrypops %>%
-  dplyr::filter(country_name == "Mongolia") %>%
-  tail(5) %>%
-  gt() %>%
+countrypops |>
+  dplyr::filter(country_name == "Mongolia") |>
+  tail(5) |>
+  gt() |>
   cols_hide(columns = c(country_code_2, country_code_3))
 ```
 
@@ -200,17 +198,18 @@ countrypops %>%
 Use `countrypops` to create a **gt** table and use the `population` column to provide the conditional placement of footnotes, then hide that column and one other.
 
 ```{r}
-countrypops %>%
-  dplyr::filter(country_name == "Mongolia") %>%
-  tail(5) %>%
-  gt() %>%
-  cols_hide(columns = c(country_code_3, population)) %>%
+countrypops |>
+  dplyr::filter(country_name == "Mongolia") |>
+  tail(5) |>
+  gt() |>
+  cols_hide(columns = c(country_code_3, population)) |>
   tab_footnote(
-    footnote = "Population above 3,000,000.",
+    footnote = "Population above 3,200,000.",
     locations = cells_body(
       columns = year,
-      rows = population > 3000000
-    )
+      rows = population > 3200000
+    ), 
+    placement = "right"
   )
 ```
 
@@ -235,14 +234,14 @@ The `cols_merge_range()` function is a specialized variant of the `cols_merge()`
 Use `gtcars` to create a **gt** table, keeping only the `model`, `mpg_c`, and `mpg_h` columns; merge the mpg columns together as a single range column (which is labeled as `MPG`, in italics).
 
 ```{r}
-gtcars %>%
-  dplyr::select(model, starts_with("mpg")) %>%
-  dplyr::slice(1:8) %>%
-  gt() %>%
+gtcars |>
+  dplyr::select(model, starts_with("mpg")) |>
+  dplyr::slice(1:8) |>
+  gt() |>
   cols_merge_range(
     col_begin = mpg_c,
     col_end = mpg_h
-  ) %>%
+  ) |>
   cols_label(
     mpg_c = md("*MPG*")
   )
@@ -269,19 +268,19 @@ The `cols_merge_uncert()` function is a specialized variant of the `cols_merge()
 Use `exibble` to create a **gt** table, keeping only the `currency` and `num` columns; merge columns into one with a base value and uncertainty (after formatting the `num` column).
 
 ```{r}
-exibble %>%
-  dplyr::select(currency, num) %>%
-  dplyr::slice(1:7) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(currency, num) |>
+  dplyr::slice(1:7) |>
+  gt() |>
   fmt_number(
     columns = num,
     decimals = 3,
     use_seps = FALSE
-  ) %>%
+  ) |>
   cols_merge_uncert(
     col_val = currency,
     col_uncert = num
-  ) %>%
+  ) |>
   cols_label(currency = "value + uncert.")
 ```
 
@@ -305,37 +304,38 @@ The `cols_merge_n_pct()` function is a specialized variant of the `cols_merge()`
 Use `pizzaplace` to create a **gt** table that displays the counts and percentages of the top 3 pizzas sold by pizza category in 2015. The `cols_merge_n_pct()` function is used to merge the `n` and `frac` columns (and the `frac` column is formatted using `fmt_percent()`).
 
 ```{r}
-pizzaplace %>%
-  dplyr::group_by(name, type, price) %>%
+pizzaplace |>
+  dplyr::group_by(name, type, price) |>
   dplyr::summarize(
     n = dplyr::n(),
-    frac = n/nrow(.),
+    frac = n / nrow(pizzaplace),
     .groups = "drop"
-  ) %>%
-  dplyr::arrange(type, dplyr::desc(n)) %>%
-  dplyr::group_by(type) %>%
-  dplyr::slice_head(n = 3) %>%
+  ) |>
+  dplyr::arrange(type, dplyr::desc(n)) |>
+  dplyr::group_by(type) |>
+  dplyr::slice_head(n = 3) |>
   gt(
     rowname_col = "name",
     groupname_col = "type"
-  ) %>%
-  fmt_integer(n) %>%
-  fmt_percent(frac) %>%
+  ) |>
+  fmt_integer(n) |>
+  fmt_percent(frac) |>
   cols_merge_n_pct(
     col_n = n,
     col_pct = frac
-  ) %>%
-  fmt_currency(price) %>%
+  ) |>
+  fmt_currency(price) |>
   cols_label(
-    n = md("*N*<br>(%)"),
-    price = md("Price<br>*(USD)*")
-  ) %>%
+    n = "*N*  \n(%)",
+    price = "Price  \n*(USD)*",
+    .fn = md
+  ) |>
   tab_style(
     style = cell_text(font = "monospace"),
     locations = cells_stub()
-  ) %>%
-  tab_stubhead(md("Cat. and  \nPizza Code")) %>%
-  tab_header(title = "Top 3 Pizzas Sold by Category in 2015") %>%
+  ) |>
+  tab_stubhead(md("Cat. and  \nPizza Code")) |>
+  tab_header(title = "Top 3 Pizzas Sold by Category in 2015") |>
   tab_options(table.width = px(512))
 ```
 
@@ -348,7 +348,8 @@ cols_merge(
   data,
   columns,
   hide_columns = columns[-1],
-  pattern = paste0("{", seq_along(columns), "}", collapse = " ")
+  rows = everything(),
+  pattern = NULL
 )
 ```
 
@@ -359,20 +360,21 @@ This function takes input from two or more columns and allows the contents to be
 Use `sp500` to create a **gt** table; merge the `open` & `close` columns together, and, the `low` & `high` columns (putting an em dash between both); rename the columns.
 
 ```{r}
-sp500 %>%
-  dplyr::slice(50:55) %>%
-  dplyr::select(-volume, -adj_close) %>%
-  gt() %>%
+sp500 |>
+  dplyr::slice(50:55) |>
+  dplyr::select(-volume, -adj_close) |>
+  gt() |>
   cols_merge(
     columns = c(open, close),
     hide_columns = close,
     pattern = "{1} - {2}"
-  ) %>%
+  ) |>
   cols_merge(
     columns = c(low, high),
     hide_columns = high,
+    rows = 1:3,
     pattern = "{1} - {2}"
-  ) %>%
+  ) |>
   cols_label(
     open = "open/close",
     low = "low/high"
