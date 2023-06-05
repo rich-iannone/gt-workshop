@@ -84,16 +84,16 @@ We can modify the layout a bit in the first step and create a stub. A stub is a 
 exibble |> gt(rowname_col = "row")
 ```
 
-Great! A bit on the *stub*. It doesn't have a column label above it because it's technically not a column (it's the... stub). We can still put a label above it though! That's with the `tab_stubhead()` function (in the next module).
+Great! A bit on the *stub*. It doesn't have a column label above it because it's technically not a column. We can still put a label above it though, and this is done with the `tab_stubhead()` function (demo for this in the next module).
 
-We can do some more structuring. Sets of rows can be grouped, showing a *row group label* above each group. We can do this by using a column containing categorical values (usually grouping labels). Conveniently again, exibble has the `"group"` column. Let's use that in the `rowname_col` argument of `gt()` and see what it looks like:
+We can do some more structuring. Sets of rows can be grouped, showing a *row group label* above each group. We can do this by using a column containing categorical values (usually grouping labels). Conveniently again, `exibble` has the `"group"` column. Let's use that in the `rowname_col` argument of `gt()` and see what it looks like:
 
 ```{r}
 exibble |>
   gt(rowname_col = "row", groupname_col = "group")
 ```
 
-Even if rows are in a weird order, **gt** will put the rows in the correct group (but still respect the order of rows).
+Even if rows are in an undesirable order, **gt** will put the rows in the correct group (but still respect the order of rows).
 
 ```{r}
 exibble |>
@@ -101,7 +101,7 @@ exibble |>
   gt(rowname_col = "row", groupname_col = "group")
 ```
 
-Say you have a data frame with row names (like `mtcars`). You can put those row.names in the stub with `rownames_to_stub = TRUE`:
+Say you have a data frame with row names (like `mtcars`). You can put those `row.names` in the stub with `rownames_to_stub = TRUE`:
 
 ```{r}
 mtcars |>
@@ -109,7 +109,7 @@ mtcars |>
   gt(rownames_to_stub = TRUE)
 ```
 
-If you use **dplyr** you're probably familiar with the `group_by()` function. This will generate a grouped tibble, and you can pass that into `gt()`. The package will know what to do with a grouped tibble:
+If you use **dplyr** then you're probably familiar with the `group_by()` function. This will generate a grouped tibble, and you can pass that into `gt()`. The package will know what to do with a grouped tibble:
 
 ```{r}
 exibble |> 
@@ -140,7 +140,7 @@ gt_preview(
 )
 ```
 
-Sometimes you may want to see just a small portion of your input data. We can use `gt_preview()` in place of `gt()` to get the first x rows of data and the last y rows of data (which can be set by the `top_n` and `bottom_n` arguments).
+Sometimes you may want to see just a small portion of your input data. We can use `gt_preview()` in place of `gt()` to get the first *x* rows of data and the last *y* rows of data (which can be set by the `top_n` and `bottom_n` arguments).
 
 ##### EXAMPLES
 
@@ -152,7 +152,7 @@ gtcars |>
   gt_preview()
 ```
 
-Don't want to see the row numbers? That's fine, use `incl_rownums = FALSE`.
+Don't want to see the row numbers? They can be excluded by using `incl_rownums = FALSE`.
 
 ```{r}
 sp500 |> 
@@ -176,7 +176,7 @@ gtsave(
 )
 ```
 
-The `gtsave()` function makes it easy to save a **gt** table to a file. The function assumes the output file type by the extension provided in the output filename. This will produce either an HTML, PDF, PNG, LaTeX, or RTF file.
+The `gtsave()` function makes it easy to save a **gt** table to a file. The function assumes the output file type by the extension provided in the output filename. This will produce either an HTML, PDF, PNG, LaTeX, RTF, or docx file.
 
 ##### EXAMPLES
 
