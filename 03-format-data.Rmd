@@ -11,7 +11,7 @@ library(tidyverse)
 
 ## Intro
 
-Columns of data can be formatted with the `fmt_*()` functions. We can specify the rows of these columns quite precisely with the `rows` argument. We get to apply these functions exactly once to each data cell (last call wins). Need to do custom formatting? Use the `fmt()` function and define your own formatter within (or, create a wrapper with `fmt()` if you prefer). The `text_transform()` function allows for post-processing of any data, and we provide a function for that transformation.
+Columns of data can be formatted with the `fmt_*()` functions. We can specify the rows of these columns quite precisely with the `rows` argument. We get to apply these functions exactly once to each data cell (last call wins). Need to do custom formatting? Use the `fmt()` function and define your own formatting function (or, create a wrapper with `fmt()` if you prefer). The `text_transform()` function allows for post-processing of any data, and we provide a function for that transformation.
 
 ------
 
@@ -26,8 +26,9 @@ Columns of data can be formatted with the `fmt_*()` functions. We can specify th
 - `fmt_time()`
 - `fmt_datetime()`
 - `fmt_markdown()`
-- `fmt_missing()`
+- `sub_missing()`
 - `data_color()`
+- `text_transform()`
 
 Information functions:
 
@@ -45,7 +46,7 @@ Information functions:
 ``` r
 fmt_number(
   data,
-  columns,
+  columns = everything(),
   rows = everything(),
   decimals = 2,
   n_sigfig = NULL,
@@ -59,6 +60,7 @@ fmt_number(
   sep_mark = ",",
   dec_mark = ".",
   force_sign = FALSE,
+  system = c("intl", "ind"),
   locale = NULL
 )
 ```
@@ -84,21 +86,30 @@ We get a lot of control over numeric formatting with the following options:
 Use `exibble` to create a **gt** table. Format the `num` column using `fmt_number()` and its default options.
 
 ```{r}
-exibble %>%
-  dplyr::select(num) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(num, char) |>
+  gt() |>
+  fmt_number()
+```
+
+
+We can limit which numeric columns are formatted by targeting columns to format in the `columns` argument.
+
+```{r}
+exibble |>
+  dplyr::select(num, char, currency) |>
+  gt() |>
   fmt_number(columns = num)
 ```
 
 
-Again with `exibble`, format the `num` column as numeric with three decimal places. Don't use digit separators (`use_seps = FALSE`).
+Let's format the `num` column as numeric with three decimal places. Don't use digit separators (`use_seps = FALSE`).
 
 ```{r}
-exibble %>%
-  dplyr::select(num) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(num) |>
+  gt() |>
   fmt_number(
-    columns = num,
     decimals = 3,
     use_seps = FALSE
   )
@@ -108,11 +119,10 @@ exibble %>%
 Format only the first three rows of `num`, this time with 4 decimal places.
 
 ```{r}
-exibble %>%
-  dplyr::select(num) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(num) |>
+  gt() |>
   fmt_number(
-    columns = num,
     rows = 1:3,
     decimals = 4
   )
@@ -122,9 +132,9 @@ exibble %>%
 Format only the rows of `num` (to 4 decimal places) where values in `currency` are greater than 30.
 
 ```{r}
-exibble %>%
-  dplyr::select(num, currency) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(num, currency) |>
+  gt() |>
   fmt_number(
     columns = num,
     rows = currency > 30,
@@ -136,9 +146,9 @@ exibble %>%
 Combine the conditional selection of rows with scaling values by 1/1000 and then putting a `"K"` after the scaled values (with a `pattern`).
 
 ```{r}
-exibble %>%
-  dplyr::select(num) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(num) |>
+  gt() |>
   fmt_number(
     columns = num,
     rows = num > 500,
@@ -152,15 +162,14 @@ exibble %>%
 Use `countrypops` to create a **gt** table. Format all numeric columns to use large-number suffixing (with `suffixing = TRUE`).
 
 ```{r}
-countrypops %>%
-  dplyr::select(country_code_3, year, population) %>%
-  dplyr::filter(country_code_3 %in% c("CHN", "IND", "USA", "PAK", "IDN")) %>%
-  dplyr::filter(year > 1975 & year %% 5 == 0) %>%
-  tidyr::spread(year, population) %>%
-  dplyr::arrange(desc(`2015`)) %>%
-  gt(rowname_col = "country_code_3") %>%
+countrypops |>
+  dplyr::select(country_code_3, year, population) |>
+  dplyr::filter(country_code_3 %in% c("CHN", "IND", "USA", "PAK", "IDN")) |>
+  dplyr::filter(year > 1975 & year %% 5 == 0) |>
+  tidyr::spread(year, population) |>
+  dplyr::arrange(desc(`2015`)) |>
+  gt(rowname_col = "country_code_3") |>
   fmt_number(
-    columns = 2:9, # <- selecting columns 2 to 9 from *passed in dataset*
     decimals = 2,
     suffixing = TRUE
   )
@@ -170,9 +179,9 @@ countrypops %>%
 With `exibble`, make a simple **gt** table. Format the `num` column as numeric with three decimal places and do this formatting according to the `"fr"` locale.
 
 ```{r}
-exibble %>%
-  dplyr::select(num) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(num) |>
+  gt() |>
   fmt_number(
     columns = num,
     decimals = 3,
@@ -185,9 +194,9 @@ exibble %>%
 ### `fmt_integer()`: Format values as integers
 
 ``` r
-fmt_number(
+fmt_integer(
   data,
-  columns,
+  columns = everything(),
   rows = everything(),
   use_seps = TRUE,
   accounting = FALSE,
@@ -196,6 +205,7 @@ fmt_number(
   pattern = "{x}",
   sep_mark = ",",
   force_sign = FALSE,
+  system = c("intl", "ind"),
   locale = NULL
 )
 ```
@@ -207,10 +217,10 @@ With numeric values in a **gt** table, we can perform number-based formatting so
 Use `exibble` to create a **gt** table. Format the `num` column using `fmt_integer()` and its default options.
 
 ```{r}
-exibble %>%
-  dplyr::select(num) %>%
-  gt() %>%
-  fmt_integer(columns = num)
+exibble |>
+  dplyr::select(num) |>
+  gt() |>
+  fmt_integer()
 ```
 
 
@@ -221,15 +231,17 @@ exibble %>%
 ```r
 fmt_scientific(
   data,
-  columns,
+  columns = everything(),
   rows = everything(),
   decimals = 2,
   drop_trailing_zeros = FALSE,
   scale_by = 1,
+  exp_style = "x10n",
   pattern = "{x}",
   sep_mark = ",",
   dec_mark = ".",
-  force_sign = FALSE,
+  force_sign_m = FALSE,
+  force_sign_n = FALSE,
   locale = NULL
 )
 ```
@@ -241,50 +253,13 @@ With numeric values in a **gt** table, we can perform formatting so that the tar
 Use `exibble` to create a **gt** table. Format the `num` column as partially in scientific notation (values <=500).
 
 ```{r}
-exibble %>%
-  dplyr::select(num, currency) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(num, currency) |>
+  gt() |>
   fmt_scientific(
     columns = num,
     rows = num <= 500,
     decimals = 1
-  )
-```
-
-
-------
-
-### `fmt_engineering()`: Format values to engineering notation
-
-``` r
-fmt_engineering(
-  data,
-  columns,
-  rows = everything(),
-  decimals = 2,
-  drop_trailing_zeros = FALSE,
-  scale_by = 1,
-  pattern = "{x}",
-  sep_mark = ",",
-  dec_mark = ".",
-  force_sign = FALSE,
-  locale = NULL
-)
-```
-
-With numeric values in a gt table, we can perform formatting so that the targeted values are rendered in engineering notation.
-
-##### EXAMPLE
-
-Use `exibble` to create a **gt** table. Format the `num` column to be in engineering notation.
-
-```{r}
-exibble %>%
-  dplyr::select(num, currency) %>%
-  gt() %>%
-  fmt_engineering(
-    columns = num,
-    decimals = 2
   )
 ```
 
@@ -296,7 +271,7 @@ exibble %>%
 ``` r
 fmt_percent(
   data,
-  columns,
+  columns = everything(),
   rows = everything(),
   decimals = 2,
   drop_trailing_zeros = FALSE,
@@ -310,6 +285,7 @@ fmt_percent(
   force_sign = FALSE,
   incl_space = FALSE,
   placement = "right",
+  system = c("intl", "ind"),
   locale = NULL
 )
 ```
@@ -321,13 +297,13 @@ With numeric values in a **gt** table, we can perform percentage-based formattin
 Use `pizzaplace` to create a **gt** table. Format the `frac_of_quota` column to display values as percentages.
 
 ```{r}
-pizzaplace %>%
-  dplyr::mutate(month = as.numeric(substr(date, 6, 7))) %>%
-  dplyr::group_by(month) %>%
-  dplyr::summarize(pizzas_sold = dplyr::n()) %>%
-  dplyr::ungroup() %>%
-  dplyr::mutate(frac_of_quota = pizzas_sold / 4000) %>%
-  gt(rowname_col = "month") %>%
+pizzaplace |>
+  dplyr::mutate(month = as.numeric(substr(date, 6, 7))) |>
+  dplyr::group_by(month) |>
+  dplyr::summarize(pizzas_sold = dplyr::n()) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(frac_of_quota = pizzas_sold / 4000) |>
+  gt(rowname_col = "month") |>
   fmt_percent(
     columns = frac_of_quota,
     decimals = 1
@@ -341,7 +317,7 @@ pizzaplace %>%
 ``` r
 fmt_currency(
   data,
-  columns,
+  columns = everything(),
   rows = everything(),
   currency = "USD",
   use_subunits = TRUE,
@@ -357,6 +333,7 @@ fmt_currency(
   force_sign = FALSE,
   placement = "left",
   incl_space = FALSE,
+  system = c("intl", "ind"),
   locale = NULL
 )
 ```
@@ -368,8 +345,8 @@ With numeric values in a **gt** table, we can perform currency-based formatting.
 Use `exibble` to create a **gt** table. Format the `currency` column to have currency values in euros (`EUR`).
 
 ```{r}
-exibble %>%
-  gt() %>%
+exibble |>
+  gt() |>
   fmt_currency(
     columns = currency,
     currency = "EUR"
@@ -377,16 +354,16 @@ exibble %>%
 ```
 
 
-Use `exibble` to create a **gt** table. Keep only the `num` and `currency`, columns, then, format those columns using the `CNY` and `GBP` currencies.
+Use `exibble` to create a **gt** table. Keep only the `num` and `currency`, columns, then, format those columns using the `JPY` and `GBP` currencies.
 
 ```{r}
-exibble %>%
-  dplyr::select(num, currency) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(num, currency) |>
+  gt() |>
   fmt_currency(
     columns = num,
-    currency = "CNY"
-  ) %>%
+    currency = "JPY"
+  ) |>
   fmt_currency(
     columns = currency,
     currency = "GBP"
@@ -400,9 +377,11 @@ exibble %>%
 ``` r
 fmt_date(
   data,
-  columns,
+  columns = everything(),
   rows = everything(),
-  date_style = 2
+  date_style = "iso",
+  pattern = "{x}",
+  locale = NULL
 )
 ```
 
@@ -413,33 +392,41 @@ Format input date values that are either of the `Date` type, or, are character-b
 Use `exibble` to create a **gt** table. Keep only the `date` and `time` columns. Format the `date` column to have dates formatted as `month_day_year` (date style `5`).
 
 ```{r}
-exibble %>%
-  dplyr::select(date, time) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(date, time) |>
+  gt() |>
   fmt_date(
     columns = date,
-    date_style = 5
+    date_style = "month_day_year"
   )
+```
+
+
+Information on these formats are available in `info_date_style()`
+
+```{r}
+info_date_style()
 ```
 
 
 Use `exibble` to create a **gt** table. keep only the `date` and `time` columns. Format the `date` column to have mixed date formats (dates after April will be different than the others).
 
 ```{r}
-exibble %>%
-  dplyr::select(date, time) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(date, time) |>
+  gt() |>
   fmt_date(
     columns = date,
     rows = as.Date(date) > as.Date("2015-04-01"),
-    date_style = 6
-  ) %>%
+    date_style = "m_day_year"
+  ) |>
   fmt_date(
     columns = date,
     rows = as.Date(date) <= as.Date("2015-04-01"),
-    date_style = 7
+    date_style = "day_m_year"
   )
 ```
+
 
 ------
 
@@ -448,9 +435,11 @@ exibble %>%
 ``` r
 fmt_time(
   data,
-  columns,
+  columns = everything(),
   rows = everything(),
-  time_style = 2
+  time_style = "iso",
+  pattern = "{x}",
+  locale = NULL
 )
 ```
 
@@ -458,34 +447,41 @@ Format input time values that are character-based and expressed according to the
 
 ##### EXAMPLES
 
-Use `exibble` to create a **gt** table. Keep only the `date` and `time` columns. Format the `time` column to have times formatted as `hms_p` (time style `3`).
+Use `exibble` to create a **gt** table. Keep only the `date` and `time` columns. Format the `time` column to have times formatted as `"h_m_s_p"` (time style `3`).
 
 ```{r}
-exibble %>%
-  dplyr::select(date, time) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(date, time) |>
+  gt() |>
   fmt_time(
     columns = time,
-    time_style = 3
+    time_style = "h_m_s_p"
   )
+```
+
+
+Information on these formats are available in `info_time_style()`
+
+```{r}
+info_time_style()
 ```
 
 
 Use `exibble` to create a **gt** table. Keep only the `date` and `time` columns. Format the `time` column to have mixed time formats (times after 16:00 will be different than the others).
 
 ```{r}
-exibble %>%
-  dplyr::select(date, time) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(date, time) |>
+  gt() |>
   fmt_time(
     columns = time,
     rows = time > "16:00",
-    time_style = 3
-  ) %>%
+    time_style = "h_m_s_p"
+  ) |>
   fmt_time(
     columns = time,
     rows = time <= "16:00",
-    time_style = 4
+    time_style = "h_m_p"
   )
 ```
 
@@ -496,10 +492,15 @@ exibble %>%
 ``` r
 fmt_datetime(
   data,
-  columns,
+  columns = everything(),
   rows = everything(),
-  date_style = 2,
-  time_style = 2
+  date_style = "iso",
+  time_style = "iso",
+  sep = " ",
+  format = NULL,
+  tz = NULL,
+  pattern = "{x}",
+  locale = NULL
 )
 ```
 
@@ -507,18 +508,19 @@ Format input date-time values that are character-based and expressed according t
 
 ##### EXAMPLE
 
-Use `exibble` to create a **gt** table. keep only the `datetime` column. Format the column to have dates formatted as `month_day_year` and times to be `hms_p`.
+Use `exibble` to create a **gt** table. keep only the `datetime` column. Format the column to have dates formatted as `month_day_year` and times to be `"h_m_s_p"`.
 
 ```{r}
-exibble %>%
-  dplyr::select(datetime) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(datetime) |>
+  gt() |>
   fmt_datetime(
     columns = datetime,
-    date_style = 5,
-    time_style = 3
+    date_style = "month_day_year",
+    time_style = "h_m_s_p"
   )
 ```
+
 
 ------
 
@@ -527,8 +529,9 @@ exibble %>%
 ``` r
 fmt_markdown(
   data,
-  columns,
-  rows = everything()
+  columns = everything(),
+  rows = everything(),
+  md_engine = c("markdown", "commonmark")
 )
 ```
 
@@ -577,41 +580,41 @@ dplyr::tribble(
   ~Markdown, ~md,
   text_1a,   text_2a,
   text_1b,   text_2b,
-) %>%
-  gt() %>%
-  fmt_markdown(columns = TRUE) %>%
+) |>
+  gt() |>
+  fmt_markdown() |>
   tab_options(table.width = px(400))
 ```
 
 ------
 
-### `fmt_missing()`: Format missing values
+### `sub_missing()`: Format missing values
 
 ``` r
-fmt_missing(
+sub_missing(
   data,
-  columns,
+  columns = everything(),
   rows = everything(),
   missing_text = "---"
 )
 ```
 
-Wherever there is missing data (i.e., `NA` values) a customized mark may present better than the standard `NA` text that would otherwise appear. The `fmt_missing()` function allows for this replacement through its `missing_text` argument (where an em dash serves as the default).
+Wherever there is missing data (i.e., `NA` values) a customized mark may present better than the standard `NA` text that would otherwise appear. The `sub_missing()` function allows for this replacement through its `missing_text` argument (where an em dash serves as the default).
 
 ##### EXAMPLE
 
 Use `exibble` to create a **gt** table. The `NA` values in different columns will be given replacement text.
 
 ```{r}
-exibble %>%
-  dplyr::select(-row, -group) %>%
-  gt() %>%
-  fmt_missing(
-    columns = 1:2,
+exibble |>
+  dplyr::select(-row, -group) |>
+  gt() |>
+  sub_missing(
+    columns = c(num, char),
     missing_text = "missing"
-  ) %>%
-  fmt_missing(
-    columns = 4:7,
+  ) |>
+  sub_missing(
+    columns = -c(num, char),
     missing_text = "nothing"
   )
 ```
@@ -637,20 +640,19 @@ The first method colorizes cell data according to whether values are character o
 
 ##### EXAMPLES
 
-Use `countrypops` to create a **gt** table. Apply a color scale to the `population` column with `scales::col_numeric`, four supplied colors, and a domain.
+Use `countrypops` to create a **gt** table. Apply a color scale to the `population` column with `method = "numeric"`, four supplied colors in `palette`, and a `domain` range (two-element vector).
 
 ```{r}
-countrypops %>%
-  dplyr::filter(country_name == "Mongolia") %>%
-  dplyr::select(-contains("code")) %>%
-  tail(10) %>%
-  gt() %>%
+countrypops |>
+  dplyr::filter(country_name == "Mongolia") |>
+  dplyr::select(-contains("code")) |>
+  tail(10) |>
+  gt() |>
   data_color(
     columns = population,
-    colors = scales::col_numeric(
-      palette = c("red", "orange", "green", "blue"),
-      domain = c(0.2E7, 0.4E7)
-    )
+    method = "numeric",
+    palette = c("red", "orange", "green", "blue"),
+    domain = c(2E6, 4E6)
   )
 ```
 
@@ -658,27 +660,59 @@ countrypops %>%
 Use `pizzaplace` to create a **gt** table. Apply colors from the `red_material` palette (in the `ggsci` pkg but more easily gotten from the `paletteer` package, info at `info_paletteer()`) to the `sold` and `income` columns. Set the `domain` of `scales::col_numeric()` to `NULL` will use the bounds of the available data as the domain.
 
 ```{r}
-pizzaplace %>%
-  dplyr::filter(type %in% c("chicken", "supreme")) %>%
-  dplyr::group_by(type, size) %>%
+pizzaplace |>
+  dplyr::filter(type %in% c("chicken", "supreme")) |>
+  dplyr::group_by(type, size) |>
   dplyr::summarize(
     sold = dplyr::n(),
     income = sum(price),
     .groups = "drop"
-  ) %>%
-  gt(rowname_col = "size") %>%
+  ) |>
+  gt(rowname_col = "size") |>
   data_color(
     columns = c(sold, income),
-    colors = scales::col_numeric(
-      palette = paletteer::paletteer_d(
-        palette = "ggsci::red_material"
-      ) %>% as.character(),
-      domain = NULL
-    )
+    method = "numeric",
+    palette = "ggsci::red_material"
   )
 ```
 
 ------
+
+### `text_transform()`: Perform text transformations with a custom function
+
+``` r
+data_color(
+  data,
+  fn,
+  locations = cells_body()
+)
+```
+
+Text transforming in **gt** is the act of modifying formatted strings in targeted cells. The `text_transform()` function provides the most flexibility of all the `⁠text_*(`)⁠ functions in their family of functions. With it, you target the cells to undergo modification in the locations argument while also supplying a function to the `fn` argument.
+
+The function given to `fn` should ideally at the very least take `x` as an input (it stands for the character vector that is essentially the targeted cells) and return a character vector of the same length as the input. Using the construction `function(x) { .. }` for the function is recommended.
+
+##### EXAMPLES
+
+Use a subset of the `sp500` dataset to create a **gt** table. Transform the text in the `date` column using a function supplied to `text_transform()` (via the `fn` argument).
+
+```{r}
+sp500 |>
+  dplyr::slice_head(n = 10) |>
+  dplyr::select(date, open, close) |>
+  dplyr::arrange(-dplyr::row_number()) |>
+  gt() |>
+  fmt_currency() |>
+  text_transform(
+    fn = function(x) {
+      paste0("Date: ", x)
+    },
+    locations = cells_body(columns = date)
+  )
+```
+
+------
+
 
 ### SUMMARY
 
@@ -686,7 +720,7 @@ pizzaplace %>%
 2. Options for these number-based formats include: specification of separators, formatting according to a given locale, scaling values, applying a pattern, etc.
 3. Dates, times, and date-times can be formatted to numbered styles with `fmt_date()`, `fmt_time()`, and `fmt_datetime()`. 
 4. Markdown text can be transformed using `fmt_markdown()`.
-5. Missing values (i.e., `NA` values) can be substituted with text by using `fmt_missing()`.
+5. Missing values (i.e., `NA` values) can be substituted with text by using `sub_missing()`.
 6. Cells can be colored according to their values with `data_color()`; use functions from the **scales** package and color palettes from the **paletteer** package to help with this.
 7. A number of `info_*()` functions provide useful information on supported locales, currencies, date and time styles, and color palettes in **paletteer**.
 
