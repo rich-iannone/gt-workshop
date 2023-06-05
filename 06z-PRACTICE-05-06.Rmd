@@ -9,7 +9,7 @@ library(gt)
 library(tidyverse)
 ```
 
-Final practice session. What a long and winding road it's been.
+Final practice session.
 
 ### **gt** functions from module `05`
 
@@ -35,14 +35,14 @@ Final practice session. What a long and winding road it's been.
 Try out some of the `opt_*()` functions on the table below. Also, set a default table font using `opt_table_font()` and `google_font()`. Use `info_google_fonts()` to get the names of some of Google's Fonts.
 
 ```{r}
-exibble %>%
-  gt(rowname_col = "row", groupname_col = "group") %>%
-  tab_header(title = "The title", subtitle = "The subtitle") %>%
-  tab_source_note("A source note.") %>%
+exibble |>
+  gt(rowname_col = "row", groupname_col = "group") |>
+  tab_header(title = "The title", subtitle = "The subtitle") |>
+  tab_source_note("A source note.") |>
   tab_footnote(
     footnote = "A footnote",
     locations = cells_body(columns = 1, rows = 1)
-  ) %>%
+  ) |>
   tab_style(
     style = cell_fill(color = "#E5873A"),
     locations = cells_body(columns = char, rows = 1)
