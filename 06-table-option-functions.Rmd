@@ -53,31 +53,28 @@ Alter the footnote marks for any footnotes that may be present in the table. Eit
 Use `sza` to create a **gt** table, adding three footnotes. Call `opt_footnote_marks()` to specify which footnote marks to use.
 
 ```{r}
-sza %>%
-  dplyr::select(latitude, tst, sza) %>%
-  dplyr::filter(!is.na(sza)) %>%
-  dplyr::group_by(latitude, tst) %>%
+sza |>
+  dplyr::select(latitude, tst, sza) |>
+  dplyr::filter(!is.na(sza)) |>
+  dplyr::group_by(latitude, tst) |>
   dplyr::summarize(
     SZA.Max = max(sza, na.rm = TRUE),
-    SZA.Min = min(sza, na.rm = TRUE), .groups = "drop"
-  ) %>%
-  dplyr::filter(latitude == 30, !is.infinite(SZA.Min)) %>%
-  dplyr::select(-latitude) %>%
-  gt(rowname_col = "tst") %>%
-  tab_spanner_delim(delim = ".") %>%
-  tab_stubhead("TST") %>%
+    SZA.Min = min(sza, na.rm = TRUE), 
+    .groups = "drop"
+  ) |>
+  dplyr::filter(latitude == 30, !is.infinite(SZA.Min)) |>
+  dplyr::select(-latitude) |>
+  gt(rowname_col = "tst") |>
+  tab_spanner_delim(delim = ".") |>
+  tab_stubhead("TST") |>
   tab_footnote(
     footnote = "True solar time.",
     locations = cells_stubhead()
-  ) %>%
-  tab_footnote(
-    footnote = "Solar zenith angle.",
-    locations = cells_column_spanners(spanners = "SZA")
-  ) %>%
+  ) |>
   tab_footnote(
     footnote = "The Lowest SZA.",
     locations = cells_body(columns = everything(), rows = "1200")
-  ) %>%
+  ) |>
   opt_footnote_marks(marks = "standard")
 ```
 
@@ -99,29 +96,29 @@ By default, a **gt** table does not have row striping enabled. However, this fun
 Use `exibble` to create a **gt** table with a number of table parts added. Next, we add row striping to every second row with the `opt_add_row_striping()` function.
 
 ```{r}
-exibble %>%
-  gt(rowname_col = "row", groupname_col = "group") %>%
+exibble |>
+  gt(rowname_col = "row", groupname_col = "group") |>
   summary_rows(
     groups = "grp_a",
     columns = c(num, currency),
     fns = list(
       min = ~min(., na.rm = TRUE),
       max = ~max(., na.rm = TRUE)
-    )) %>%
+    )
+  ) |>
   grand_summary_rows(
     columns = currency,
-    fns = list(
-      total = ~sum(., na.rm = TRUE)
-    )) %>%
-  tab_source_note(source_note = "This is a source note.") %>%
+    fns = list(total = ~sum(., na.rm = TRUE))
+  ) |>
+  tab_source_note(source_note = "This is a source note.") |>
   tab_footnote(
     footnote = "This is a footnote.",
     locations = cells_body(columns = 1, rows = 1)
-  ) %>%
+  ) |>
   tab_header(
     title = "The title of the table",
     subtitle = "The table's subtitle"
-  ) %>%
+  ) |>
   opt_row_striping()
 ```
 
@@ -143,29 +140,29 @@ By default, a table header added to a **gt** table has center alignment for both
 Use `exibble` to create a **gt** table with a number of table parts added. The header (consisting of the title and the subtitle) are to be aligned to the left with the `opt_align_table_header()` function.
 
 ```{r}
-exibble %>%
-  gt(rowname_col = "row", groupname_col = "group") %>%
+exibble |>
+  gt(rowname_col = "row", groupname_col = "group") |>
   summary_rows(
     groups = "grp_a",
     columns = c(num, currency),
     fns = list(
       min = ~min(., na.rm = TRUE),
       max = ~max(., na.rm = TRUE)
-    )) %>%
+    )
+  ) |>
   grand_summary_rows(
     columns = currency,
-    fns = list(
-      total = ~sum(., na.rm = TRUE)
-    )) %>%
-  tab_source_note(source_note = "This is a source note.") %>%
+    fns = list(total = ~sum(., na.rm = TRUE))
+  ) |>
+  tab_source_note(source_note = "This is a source note.") |>
   tab_footnote(
     footnote = "This is a footnote.",
     locations = cells_body(columns = 1, rows = 1)
-  ) %>%
+  ) |>
   tab_header(
     title = "The title of the table",
     subtitle = "The table's subtitle"
-  ) %>%
+  ) |>
   opt_align_table_header(align = "left")
 ```
 
@@ -188,29 +185,29 @@ Sometimes an all-capitalized look is suitable for a table. With the `opt_all_cap
 Use `exibble` to create a **gt** table with a number of table parts added. All text in the column labels, the stub, and in all row groups is to be transformed to all caps using `opt_all_caps()`.
 
 ```{r}
-exibble %>%
-  gt(rowname_col = "row", groupname_col = "group") %>%
+exibble |>
+  gt(rowname_col = "row", groupname_col = "group") |>
   summary_rows(
     groups = "grp_a",
     columns = c(num, currency),
     fns = list(
       min = ~min(., na.rm = TRUE),
       max = ~max(., na.rm = TRUE)
-    )) %>%
+    )
+  ) |>
   grand_summary_rows(
     columns = currency,
-    fns = list(
-      total = ~sum(., na.rm = TRUE)
-    )) %>%
-  tab_source_note(source_note = "This is a source note.") %>%
+    fns = list(total = ~sum(., na.rm = TRUE))
+  ) |>
+  tab_source_note(source_note = "This is a source note.") |>
   tab_footnote(
     footnote = "This is a footnote.",
     locations = cells_body(columns = 1, rows = 1)
-  ) %>%
+  ) |>
   tab_header(
     title = "The title of the table",
     subtitle = "The table's subtitle"
-  ) %>%
+  ) |>
   opt_all_caps()
 ```
 
@@ -232,29 +229,29 @@ The `opt_table_lines()` function sets table lines in one of three possible ways:
 Use `exibble` to create a gt table with a number of table parts added. Then, use the `opt_table_lines()` function to haves lines everywhere there can possibly be lines.
 
 ```{r}
-exibble %>%
-  gt(rowname_col = "row", groupname_col = "group") %>%
+exibble |>
+  gt(rowname_col = "row", groupname_col = "group") |>
   summary_rows(
     groups = "grp_a",
     columns = c(num, currency),
     fns = list(
       min = ~min(., na.rm = TRUE),
       max = ~max(., na.rm = TRUE)
-    )) %>%
+    )
+  ) |>
   grand_summary_rows(
     columns = currency,
-    fns = list(
-      total = ~sum(., na.rm = TRUE)
-    )) %>%
-  tab_source_note(source_note = "This is a source note.") %>%
+    fns = list(total = ~sum(., na.rm = TRUE))
+  ) |>
+  tab_source_note(source_note = "This is a source note.") |>
   tab_footnote(
     footnote = "This is a footnote.",
     locations = cells_body(columns = 1, rows = 1)
-  ) %>%
+  ) |>
   tab_header(
     title = "The title of the table",
     subtitle = "The table's subtitle"
-  ) %>%
+  ) |>
   opt_table_lines()
 ```
 
@@ -278,29 +275,29 @@ This function puts an outline of consistent `style`, `width`, and `color` around
 Use `exibble` to create a **gt** table with a number of table parts added. Have an outline wrap around the entire table by using `opt_table_outline()`.
 
 ```{r}
-exibble %>%
-  gt(rowname_col = "row", groupname_col = "group") %>%
+exibble |>
+  gt(rowname_col = "row", groupname_col = "group") |>
   summary_rows(
     groups = "grp_a",
     columns = c(num, currency),
     fns = list(
       min = ~min(., na.rm = TRUE),
       max = ~max(., na.rm = TRUE)
-    )) %>%
+    )
+  ) |>
   grand_summary_rows(
     columns = currency,
-    fns = list(
-      total = ~sum(., na.rm = TRUE)
-    )) %>%
-  tab_source_note(source_note = "This is a source note.") %>%
+    fns = list(total = ~sum(., na.rm = TRUE))
+  ) |>
+  tab_source_note(source_note = "This is a source note.") |>
   tab_footnote(
     footnote = "This is a footnote.",
     locations = cells_body(columns = 1, rows = 1)
-  ) %>%
+  ) |>
   tab_header(
     title = "The title of the table",
     subtitle = "The table's subtitle"
-  ) %>%
+  ) |>
   opt_table_outline()
 ```
 
@@ -326,39 +323,38 @@ to use `tab_style()` in conjunction with the `cell_text()` helper function.
 Use `sp500` to create a small gt table, using `fmt_currency()` to provide a dollar sign for the first row of monetary values; then, set a larger font size for the table and use the `Merriweather` font (from Google Fonts, via `google_font()`) with two font fallbacks (`Cochin` and the catchall `Serif` group).
 
 ```{r}
-sp500 %>%
-  dplyr::slice(1:10) %>%
-  dplyr::select(-volume, -adj_close) %>%
-  gt() %>%
+sp500 |>
+  dplyr::slice(1:10) |>
+  dplyr::select(-volume, -adj_close) |>
+  gt() |>
   fmt_currency(
-    columns = 2:5,
     rows = 1,
     currency = "USD",
     use_seps = FALSE
-  ) %>%
-  tab_options(table.font.size = px(18)) %>%
+  ) |>
+  tab_options(table.font.size = px(18)) |>
   opt_table_font(
     font = list(google_font(name = "Merriweather"), "Cochin", "Serif")
   )
 ```
 
-Use `sza` to create an eleven-row table; within `opt_table_font()`, set up a preferred list of sans-serif fonts that are commonly available in macOS and Windows (using part of the `default_fonts()` vector as a fallback).
+Use `sza` to create an eleven-row table; within `opt_table_font()`, set up a preferred list of fonts that are commonly available in macOS and Windows (appending the `default_fonts()` vector as a fallback).
 
 ```{r}
-sza %>%
+sza |>
   dplyr::filter(
     latitude == 20 &
       month == "jan" &
       !is.na(sza)
-  ) %>%
-  dplyr::select(-latitude, -month) %>%
-  gt() %>%
+  ) |>
+  dplyr::select(-latitude, -month) |>
+  gt() |>
   opt_table_font(
     font = c(
-      "Helvetica Neue", "Segoe UI",
-      default_fonts()[-c(1:3)]
+      "Comic Sans MS", "Segoe UI",
+      default_fonts()
     )
-  ) %>%
+  ) |>
   opt_all_caps()
 ```
 
@@ -382,16 +378,14 @@ The `opt_css()` function makes it possible to add CSS to a **gt** table. This CS
 Let's use `exibble` to create a two-column table with some formatting applied.
 
 ```{r}
-exibble %>%
-  dplyr::select(num, currency) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(num, currency) |>
+  gt() |>
   fmt_currency(
     columns = currency,
     currency = "HKD"
-  ) %>%
-  fmt_scientific(
-    columns = num
-  )
+  ) |>
+  fmt_scientific(columns = num)
 ```
 
 Let's add some CSS rules with `opt_css()`. First, we need to provide an explicit `id` for the table, and we specify that in the `gt()` function (here as `"one"`). Then, we add three CSS rules that act on the `#one .gt_table`, `#one .gt_row`, and `#one .gt_col_heading` selectors.
@@ -399,14 +393,14 @@ Let's add some CSS rules with `opt_css()`. First, we need to provide an explicit
 How do we discover which rules to use and which selectors to target? Use the browser's developer tools. You can right-click and `Inspect Element` on a rendered table. Each browser's interface for this will be a bit different but the idea will be the same. Experiment with changing values, adding rules, deactivating rules, and using `!important` in some case (to make your rule override). Below is an example with rules set in `opt_css()`.
 
 ```{r}
-exibble %>%
-  dplyr::select(num, currency) %>%
-  gt(id = "one") %>%
+exibble |>
+  dplyr::select(num, currency) |>
+  gt(id = "one") |>
   fmt_currency(
     columns = currency,
     currency = "HKD"
-  ) %>%
-  fmt_scientific(columns = num) %>%
+  ) |>
+  fmt_scientific(columns = num) |>
   opt_css(
     css = "
   #one .gt_table {
