@@ -37,11 +37,3 @@ Normally you would install **gt** on your system by using `install.packages()`:
 # install.packages("gt")
 ```
 
-For this workshop, however, we are going to use the development version of **gt** and install it from GitHub with `devtools::install_github()`.
-
-```{r eval=FALSE}
-# devtools::install_github("rstudio/gt")
-```
-
-
-
