@@ -191,10 +191,10 @@ gt_tbl <-
   )
 ```
 
-Write an HTML file with inlined CSS (which is necessary for including the table as part of an HTML email in the **blastula** package).
+Write an HTML file.
 
 ```{r}
-gt_tbl |> gtsave("tab_1_inlined.html", inline_css = TRUE)
+gt_tbl |> gtsave("tab_1.html", inline_css = FALSE)
 ```
 
 Get a PNG file (essentially a screenshot of the HTML table) by using the .png extension.
