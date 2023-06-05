@@ -46,43 +46,43 @@ Practice is good. We learned a great number of functions in modules `01` and `02
 - `cell_fill()`
 - `cell_borders()`
 
-That's *a lot*. In a short amount of time we can still get useful practice by trying a few things out.
+Although this is a lot, in a short amount of time we can still get useful practice by trying a few things out.
 
 #### Suggestions for practice
 
-Try modifying this statement several times and see what happens (e.g., leave out the first argument, change values, add a few other args with help from `,<TAB>` after `"group"`).
+Try modifying this statement several times and see what happens (e.g., leave out the first argument, change values, etc.).
 
 ```{r}
-exibble %>% gt(rowname_col = "row", groupname_col = "group")
+exibble |> gt(rowname_col = "row", groupname_col = "group")
 ```
 
-How about some table header fun? Try adapting this snippet of code to make a great set of `title` and `subtitle`. Use `md()` to get Markdown in there. Know HTML? Try your hand at some HTML titling with the `html()` helper. Finish it off with a `gtsave()` to your preferred output type.
+Try adapting this snippet of code to make a great set of `title` and `subtitle`. Use `md()` to get Markdown in there. Know HTML? Try your hand at some HTML titling with the `html()` helper. Use `gtsave()` to export the table to your preferred output type.
 
 ```{r}
-gtcars %>%
-  dplyr::select(mfr, model, msrp) %>%
-  dplyr::slice(1:5) %>%
-  gt() %>%
+gtcars |>
+  dplyr::select(mfr, model, msrp) |>
+  dplyr::slice(1:5) |>
+  gt() |>
   tab_header(
     title = "<title>",
     subtitle = "<subtitle>"
   )
 ```
 
-Make your **gt** table a bit more stylish. We need to use the combination of `tab_style()`, one or more location helper functions (e.g,. `cells_body()`, `cells_column_labels()`, etc.), and a styling function like `cell_fill()`. Here's an example table with a number of different location types. Try changing the background of different locations.
+To add styles in a **gt** table, we need to use the combination of `tab_style()`, one or more location helper functions (e.g,. `cells_body()`, `cells_column_labels()`, etc.), and a styling function like `cell_fill()`. Here's an example table with a number of different location types. Try changing the background of different locations.
 
 ```{r}
-exibble %>%
-  gt(rowname_col = "row", groupname_col = "group") %>%
-  tab_header(title = "The title", subtitle = "The subtitle") %>%
-  tab_source_note("A source note.") %>%
+exibble |>
+  gt(rowname_col = "row", groupname_col = "group") |>
+  tab_header(title = "The title", subtitle = "The subtitle") |>
+  tab_source_note("A source note.") |>
   tab_footnote(
     footnote = "A footnote",
     locations = cells_body(columns = 1, rows = 1)
-  ) %>%
+  ) |>
   tab_style(
     style = cell_fill(color = "#E5873A"),
-    locations = cells_body(columns = char, rows = 1)
+    locations = cells_body(columns = char, rows = "row_1")
   )
 ```
 
