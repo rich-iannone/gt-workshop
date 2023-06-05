@@ -9,7 +9,7 @@ library(gt)
 library(tidyverse)
 ```
 
-Practice time again. And practice makes perfect. We covered a lot more **gt** functions.
+Practice time again. Here we can experiment with the `fmt_*()` and `cols_*()` functions.
 
 ### **gt** functions from module `03`
 
@@ -43,19 +43,19 @@ Practice time again. And practice makes perfect. We covered a lot more **gt** fu
 - `cols_merge_n_pct()`
 - `cols_merge()`
 
-Formatters (`fmt_*()` + `data_color()`), information functions (`info_*()`), and functions that work with columns (`cols_*()`) were looked at. Below are a few examples that could be tinkered with.
+The formatting functions (`fmt_*()` + `data_color()`), information functions (`info_*()`), and functions that work with columns (`cols_*()`) were looked at. Below are a few examples for practicing.
 
 #### Suggestions for practice
 
-The `fmt_number()` function allows us to format numbers. Pretty important as tables often contain a lot of those. There are many, many options for formatting numbers. One suggestion for getting to know `fmt_number()` a bit better is to modify the options given to it. Working with just the `num` column from `exibble` and exposing all of the function's default options, go ahead and change things and run the chunk. 
+The `fmt_number()` function allows us to format numbers. This is important as tables often contain number with specific formatting requirements. There are many options for formatting numbers. One suggestion for working with `fmt_number()` is to modify the options given to it. Working with just the `num` column from `exibble` and exposing all of the function's default options, go ahead and change things and re-run the code. 
 
 ```{r}
-exibble %>%
-  dplyr::select(num) %>%
-  gt() %>%
+exibble |>
+  dplyr::select(num) |>
+  gt() |>
   fmt_number(
     columns = num,
-    rows = NULL,
+    rows = everything(),
     decimals = 2,
     n_sigfig = NULL,
     drop_trailing_zeros = FALSE,
@@ -71,22 +71,20 @@ exibble %>%
 ```
 
 
-The `data_color()` function allows us to add color to cells based functions from the **scales** package (`scales::col_quantile()`, `scales::col_bin()`, `scales::col_numeric()`, and `scales::col_factor()`). Try using these different `scales::col_*()` functions, perhaps changing the `palette` and using a non-`NULL` `domain` (hint: should be a vector of length 2). EXTRA CREDIT: Use a `fmt_*()` function that nicely formats these population values.
+The `data_color()` function allows us to add color to cells. Try using different `method` values (`"numeric"`, `"bin"`, `"quantile"`, etc.), change the `palette`, and try using a non-`NULL` `domain` (hint: should be a vector of length 2). After this, try using a `fmt_*()` function that nicely formats these population values.
 
 ```{r}
-countrypops %>%
-  dplyr::filter(country_name == "United States") %>%
-  dplyr::select(-contains("code")) %>%
-  tail(10) %>%
-  gt(rowname_col = "year", groupname_col = "country_name") %>%
-  tab_options(column_labels.hidden = TRUE) %>%
+countrypops |>
+  dplyr::filter(country_name == "United States") |>
+  dplyr::select(-contains("code")) |>
+  tail(10) |>
+  gt(rowname_col = "year", groupname_col = "country_name") |>
+  tab_options(column_labels.hidden = TRUE) |>
   data_color(
     columns = population,
-    colors = scales::col_numeric(
-      palette = c(
-        "red", "orange", "green", "blue"),
-      domain = NULL
-    )
+    method = "numeric",
+    palette = c("black", "orange", "blue", "green"),
+    domain = NULL
   )
 ```
 
@@ -94,13 +92,10 @@ countrypops %>%
 Setting column widths can be admittedly confusing. It uses browser logic to great extent and there are really a lot of possible outcomes. Try combinations of setting the overall width (`tab_options(table.width = ...)`) and using the `pct()` and `px()` helpers to define percentage and pixel widths. These interactions are occasionally surprising but there is some helpful documentation on all the interactions at https://github.com/rstudio/gt/blob/master/tests/gt-examples/01-html-script/html-17-table_width_specifications.R.
 
 ```{r}
-exibble %>%
-  dplyr::select(
-    num, char, date,
-    datetime, row
-  ) %>%
-  gt() %>%
-  tab_options(table.width = pct(100)) %>%
+exibble |>
+  dplyr::select(num, char, date, datetime, row) |>
+  gt() |>
+  tab_options(table.width = pct(100)) |>
   cols_width(
     num ~ pct(20),
     ends_with("r") ~ px(100),
