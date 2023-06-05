@@ -388,7 +388,7 @@ sp500 |>
 1. Values in columns can be aligned with the `cols_align()` function.
 2. Column labels can be set with `cols_label()` (they otherwise inherit column names from the input dataset).
 3. The widths of columns can precisely sized with `cols_width()` (HTML output only, for now); use the `px()` and `pct()` helpers to make this easier.
-4. Didn't arrange columns in the original dataset? Second chance with `cols_move()`.
+4. Didn't arrange columns in the original dataset? It's possible with `cols_move()`.
 5. Columns you don't want to show can be 'hidden' (not shown) with `cols_hide()`; this is good when you a column for something but don't want to display it in the end.
 6. Create ranged values in a column using two different columns and `cols_merge_range()`.
 7. Create values with uncertainties with two columns and `cols_merge_uncert()`.
