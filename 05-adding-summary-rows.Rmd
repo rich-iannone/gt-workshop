@@ -44,10 +44,10 @@ Add summary rows to one or more row groups by using the table data and any suita
 Use `exibble` to create a **gt** table with a stub and row groups. Get the sum of the `num` column in both groups.
 
 ```{r}
-exibble %>%
-  gt(rowname_col = "row", groupname_col = "group") %>%
+exibble |>
+  gt(rowname_col = "row", groupname_col = "group") |>
   summary_rows(
-    groups = c("grp_a", "grp_b"), # <- `TRUE` also works to target all groups
+    groups = c("grp_a", "grp_b"),
     columns = num,
     fns = list(sum = ~ sum(., na.rm = TRUE))
   )
@@ -57,22 +57,20 @@ exibble %>%
 Extend the above the example by formatting `num` values and their summary values (adding minimum and maximum summary rows as well).
 
 ```{r}
-exibble %>%
-  gt(rowname_col = "row", groupname_col = "group") %>%
+exibble |>
+  gt(rowname_col = "row", groupname_col = "group") |>
   fmt_number(
     columns = num,
     decimals = 1
-  ) %>%
+  ) |>
   summary_rows(
-    groups = TRUE,
     columns = num,
     fns = list(
       sum = ~ sum(., na.rm = TRUE),
       min = ~ min(., na.rm = TRUE),
       max = ~ max(., na.rm = TRUE)
     ),
-    formatter = fmt_number,
-    decimals = 1
+    fmt = ~ fmt_number(., decimals = 1)
   )
 ```
 
@@ -80,27 +78,25 @@ exibble %>%
 Add group summary values for the `currency` column. Use the `fmt_currency()` formatting function and re-use the summary labels (`sum`, `min`, and `max`).
 
 ```{r}
-exibble %>%
-  gt(rowname_col = "row", groupname_col = "group") %>%
+exibble |>
+  gt(rowname_col = "row", groupname_col = "group") |>
   fmt_number(
     columns = num,
     decimals = 1
-  ) %>%
+  ) |>
   summary_rows(
-    groups = TRUE,
     columns = num,
     fns = list(
       sum = ~ sum(., na.rm = TRUE),
       min = ~ min(., na.rm = TRUE),
       max = ~ max(., na.rm = TRUE)
     ),
-    formatter = fmt_number,
-    decimals = 1
-  ) %>%
+    fmt = ~ fmt_number(., decimals = 1)
+  ) |>
   fmt_currency(
     columns = currency,
     currency = "USD"
-  ) %>%
+  ) |>
   summary_rows(
     groups = TRUE,
     columns = currency,
@@ -109,8 +105,7 @@ exibble %>%
       min = ~ min(., na.rm = TRUE),
       max = ~ max(., na.rm = TRUE)
     ),
-    formatter = fmt_currency,
-    currency = "USD",
+    fmt = ~ fmt_currency(.),
     missing_text = "" # <- this `missing_text` value replaces the dashes with nothing
   )
 ```
@@ -119,25 +114,24 @@ exibble %>%
 Use `sp500` to create a **gt** table with row groups. Create summary rows (`min`, `max`, `avg`) by row group, where each each row group is a week number.
 
 ```{r}
-sp500 %>%
-  dplyr::filter(date >= "2015-01-05" & date <="2015-01-16") %>%
-  dplyr::arrange(date) %>%
-  dplyr::mutate(week = paste0("W", strftime(date, format = "%V"))) %>%
-  dplyr::select(-adj_close, -volume) %>%
+sp500 |>
+  dplyr::filter(date >= "2015-01-05" & date <= "2015-01-16") |>
+  dplyr::arrange(date) |>
+  dplyr::mutate(week = paste0("W", strftime(date, format = "%V"))) |>
+  dplyr::select(-adj_close, -volume) |>
   gt(
     rowname_col = "date",
     groupname_col = "week"
-  ) %>%
-  fmt_currency(columns = everything()) %>%
+  ) |>
+  fmt_currency(columns = everything()) |>
   summary_rows(
-    groups = TRUE,
     columns = c(open, high, low, close),
     fns = list(
-      min = ~min(.),
-      max = ~max(.),
-      avg = ~mean(.)
+      min = ~ min(.),
+      max = ~ max(.),
+      avg = ~ mean(.)
     ),
-    formatter = fmt_currency
+    fmt = ~ fmt_currency(.)
   )
 ```
 
@@ -163,23 +157,24 @@ Add grand summary rows to the **gt** table by using applying aggregation functio
 Use `sp500` to create a **gt** table with row groups. Create grand summary rows (`min`, `max`, `avg`) for the table.
 
 ```{r}
-sp500 %>%
-  dplyr::filter(date >= "2015-01-05" & date <="2015-01-16") %>%
-  dplyr::arrange(date) %>%
-  dplyr::mutate(week = paste0("W", strftime(date, format = "%V"))) %>%
-  dplyr::select(-adj_close, -volume) %>%
+sp500 |>
+  dplyr::filter(date >= "2015-01-05" & date <= "2015-01-16") |>
+  dplyr::arrange(date) |>
+  dplyr::mutate(week = paste0("W", strftime(date, format = "%V"))) |>
+  dplyr::select(-adj_close, -volume) |>
   gt(
     rowname_col = "date",
     groupname_col = "week"
-  ) %>%
-  fmt_currency(columns = everything()) %>%
+  ) |>
+  fmt_currency(columns = everything()) |>
   grand_summary_rows(
     columns = c(open, high, low, close),
     fns = list(
-      min = ~min(.),
-      max = ~max(.),
-      avg = ~mean(.)),
-    formatter = fmt_currency
+      min = ~ min(.),
+      max = ~ max(.),
+      avg = ~ mean(.)
+    ),
+    fmt = ~ fmt_currency(.)
   )
 ```
 
