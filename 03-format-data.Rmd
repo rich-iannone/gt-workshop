@@ -626,11 +626,25 @@ exibble |>
 ``` r
 data_color(
   data,
-  columns,
-  colors,
+  columns = everything(),
+  rows = everything(),
+  direction = c("column", "row"),
+  target_columns = NULL,
+  method = c("auto", "numeric", "bin", "quantile", "factor"),
+  palette = NULL,
+  domain = NULL,
+  bins = 8,
+  quantiles = 4,
+  levels = NULL,
+  ordered = FALSE,
+  na_color = NULL,
   alpha = NULL,
+  reverse = FALSE,
+  fn = NULL,
   apply_to = c("fill", "text"),
-  autocolor_text = TRUE
+  autocolor_text = TRUE,
+  contrast_algo = c("apca", "wcag"),
+  colors = NULL
 )
 ```
 
