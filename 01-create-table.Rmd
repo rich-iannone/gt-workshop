@@ -35,6 +35,7 @@ gt(
   data,
   rowname_col = "rowname",
   groupname_col = dplyr::group_vars(data),
+  process_md = FALSE,
   caption = NULL,
   rownames_to_stub = FALSE,
   row_group_as_column = FALSE,
