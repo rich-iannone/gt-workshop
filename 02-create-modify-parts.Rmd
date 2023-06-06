@@ -65,7 +65,8 @@ Helpers for defining styles (only for `tab_style()`):
 tab_header(
   data,
   title,
-  subtitle = NULL
+  subtitle = NULL,
+  preheader = NULL
 )
 ```
 
@@ -119,9 +120,12 @@ gtcars |>
 tab_spanner(
   data,
   label,
-  columns,
+  columns = NULL,
+  spanners = NULL,
+  level = NULL,
   id = label,
-  gather = TRUE
+  gather = TRUE,
+  replace = FALSE
 )
 ```
 
@@ -200,7 +204,9 @@ tab_row_group(
   data,
   label,
   rows,
-  id = label
+  id = label,
+  others_label = NULL,
+  group = NULL
 )
 ```
 
@@ -292,7 +298,8 @@ exibble |>
 tab_footnote(
   data,
   footnote,
-  locations
+  locations = NULL,
+  placement = c("auto", "right", "left")
 )
 ```
 
