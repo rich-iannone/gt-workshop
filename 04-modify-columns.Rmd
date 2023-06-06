@@ -66,7 +66,8 @@ countrypops |>
 cols_label(
   .data,
   ...,
-  .list = list2(...)
+  .list = list2(...),
+  .fn = NULL
 )
 ```
 
@@ -222,6 +223,7 @@ cols_merge_range(
   data,
   col_begin,
   col_end,
+  rows = everything(),
   sep = "--",
   autohide = TRUE
 )
@@ -256,6 +258,7 @@ cols_merge_uncert(
   data,
   col_val,
   col_uncert,
+  rows = everything(),
   sep = " +/- ",
   autohide = TRUE
 )
@@ -293,6 +296,7 @@ cols_merge_uncert(
   data,
   col_n,
   col_pct,
+  rows = everything(),
   autohide = TRUE
 )
 ```
