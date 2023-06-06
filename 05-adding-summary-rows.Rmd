@@ -28,11 +28,13 @@ Functions in this module:
 ``` r
 summary_rows(
   data,
-  groups = NULL,
+  groups = everything(),
   columns = everything(),
-  fns,
+  fns = NULL,
+  fmt = NULL,
+  side = c("bottom", "top"),
   missing_text = "---",
-  formatter = fmt_number,
+  formatter = NULL,
   ...
 )
 ```
@@ -143,9 +145,11 @@ sp500 |>
 grand_summary_rows(
   data,
   columns = everything(),
-  fns,
+  fns = NULL,
+  fmt = NULL,
+  side = c("bottom", "top"),
   missing_text = "---",
-  formatter = fmt_number,
+  formatter = NULL,
   ...
 )
 ```
