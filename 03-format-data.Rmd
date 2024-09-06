@@ -695,7 +695,7 @@ pizzaplace |>
 ### `text_transform()`: Perform text transformations with a custom function
 
 ``` r
-data_color(
+text_transform(
   data,
   fn,
   locations = cells_body()
