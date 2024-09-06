@@ -1,6 +1,7 @@
 ---
 title: "Adding Summary Rows"
-output: html_document
+format: html
+html-table-processing: none
 ---
 
 ```{r setup, include=FALSE}
@@ -25,7 +26,7 @@ Functions in this module:
 
 ### `summary_rows()`: Add groupwise summary rows using aggregation functions
 
-``` r
+```r
 summary_rows(
   data,
   groups = everything(),
@@ -141,7 +142,7 @@ sp500 |>
 
 ### `grand_summary_rows()`: Add grand summary rows using aggregation functions
 
-``` r
+```r
 grand_summary_rows(
   data,
   columns = everything(),

@@ -1,6 +1,7 @@
 ---
 title: "Formatting Data"
-output: html_document
+format: html
+html-table-processing: none
 ---
 
 ```{r setup, include=FALSE}
@@ -43,7 +44,7 @@ Information functions:
 
 ### `fmt_number()`: Format numeric values
 
-``` r
+```r
 fmt_number(
   data,
   columns = everything(),
@@ -193,7 +194,7 @@ exibble |>
 
 ### `fmt_integer()`: Format values as integers
 
-``` r
+```r
 fmt_integer(
   data,
   columns = everything(),
@@ -268,7 +269,7 @@ exibble |>
 
 ### `fmt_percent()`: Format values as a percentage
 
-``` r
+```r
 fmt_percent(
   data,
   columns = everything(),
@@ -314,7 +315,7 @@ pizzaplace |>
 
 ### `fmt_currency()`: Format values as currencies
 
-``` r
+```r
 fmt_currency(
   data,
   columns = everything(),
@@ -374,7 +375,7 @@ exibble |>
 
 ### `fmt_date()`: Format values as dates
 
-``` r
+```r
 fmt_date(
   data,
   columns = everything(),
@@ -432,7 +433,7 @@ exibble |>
 
 ### `fmt_time()`: Format values as times
 
-``` r
+```r
 fmt_time(
   data,
   columns = everything(),
@@ -489,7 +490,7 @@ exibble |>
 
 ### `fmt_datetime()`: Format values as date-times
 
-``` r
+```r
 fmt_datetime(
   data,
   columns = everything(),
@@ -526,7 +527,7 @@ exibble |>
 
 ### `fmt_markdown()`: Format Markdown text
 
-``` r
+```r
 fmt_markdown(
   data,
   columns = everything(),
@@ -590,7 +591,7 @@ dplyr::tribble(
 
 ### `sub_missing()`: Format missing values
 
-``` r
+```r
 sub_missing(
   data,
   columns = everything(),
@@ -623,7 +624,7 @@ exibble |>
 
 ### `data_color()`: Set data cell colors using a palette or a color function
 
-``` r
+```r
 data_color(
   data,
   columns = everything(),
@@ -694,7 +695,7 @@ pizzaplace |>
 
 ### `text_transform()`: Perform text transformations with a custom function
 
-``` r
+```r
 text_transform(
   data,
   fn,

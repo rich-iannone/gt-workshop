@@ -1,0 +1,40 @@
+---
+title: "Workshop Contents"
+format: html
+html-table-processing: none
+---
+
+This **gt** workshop will teach you about what **gt** can do, and, it'll give you an opportunity to experiment with the package. 
+
+The goal of the workshop is to introduce you to a lot of examples and provide some time to generate some sample tables, learning bit-by-bit as we go.
+
+Each module of the workshop focuses on a different family of functions, with relevant examples and exercises in each. They are all presented here as **Quarto** (.qmd) files with one file for each workshop module:
+
+- `"01-create-table.qmd"`
+
+- `"02-create-modify-parts.qmd"`
+
+- `"02z-PRACTICE-01-02.qmd"`
+
+- `"03-format-data.qmd"`
+
+- `"04-modify-columns.qmd"`
+
+- `"04z-PRACTICE-03-04.qmd"`
+
+- `"05-summaries.qmd"`
+
+- `"06-table_option_functions.qmd"`
+
+- `"06z-PRACTICE-05-06.qmd"`
+
+You can navigate to any of these and modify the code within the self-contained code chunks. Entire **Quarto** files can be rendered to HTML.
+
+### Installing **gt**
+
+You can install **gt** on your system by using `install.packages()`:
+
+```{r eval=FALSE}
+# install.packages("gt")
+```
+

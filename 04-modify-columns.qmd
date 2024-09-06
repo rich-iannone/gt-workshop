@@ -1,6 +1,7 @@
 ---
 title: "Modifying Columns"
-output: html_document
+format: html
+html-table-processing: none
 ---
 
 ```{r setup, include=FALSE}
@@ -32,7 +33,7 @@ The `cols_*()` functions allow for modifications that act on entire columns. Thi
 
 ### `cols_align()`: Set the alignment of columns
 
-``` r
+```r
 cols_align(
   data,
   align = c("auto", "left", "center", "right"),
@@ -62,7 +63,7 @@ countrypops |>
 
 ### `cols_label()`: Relabel one or more columns
 
-``` r
+```r
 cols_label(
   .data,
   ...,
@@ -111,7 +112,7 @@ countrypops |>
 
 ### `cols_width()`: Set the widths of columns
 
-``` r
+```r
 cols_width(
   .data,
   ...,
@@ -144,7 +145,7 @@ exibble |>
 
 ### `cols_move()`: Move one or more columns
 
-``` r
+```r
 cols_move(
   data,
   columns,
@@ -174,7 +175,7 @@ countrypops |>
 
 ### `cols_hide()`: Hide one or more columns
 
-``` r
+```r
 cols_hide(
   data,
   columns
@@ -218,7 +219,7 @@ countrypops |>
 
 ### `cols_merge_range()`: Merge two columns to a value range column
 
-``` r
+```r
 cols_merge_range(
   data,
   col_begin,
@@ -253,7 +254,7 @@ gtcars |>
 
 ### `cols_merge_uncert()`: Merge two columns to a value & uncertainty column
 
-``` r
+```r
 cols_merge_uncert(
   data,
   col_val,
@@ -291,7 +292,7 @@ exibble |>
 
 ### `cols_merge_n_pct()`: Merge two columns to combine counts and percentages
 
-``` r
+```r
 cols_merge_uncert(
   data,
   col_n,
@@ -347,7 +348,7 @@ pizzaplace |>
 
 ### `cols_merge()`: Merge data from two or more columns to a single column
 
-``` r
+```r
 cols_merge(
   data,
   columns,

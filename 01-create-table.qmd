@@ -1,6 +1,7 @@
 ---
 title: "Creating a Table, Exporting"
-output: html_document
+format: html
+html-table-processing: none
 ---
 
 ```{r setup, include=FALSE}
@@ -30,7 +31,7 @@ Finally, sometimes we want to export the table to some format. It could be HTML,
 
 ### `gt()`: Create a **gt** table object
 
-``` r
+```r
 gt(
   data,
   rowname_col = "rowname",
@@ -132,7 +133,7 @@ pizzaplace |>
 
 ### `gt_preview()`: Preview a **gt** table object
 
-``` r
+```r
 gt_preview(
   data,
   top_n = 5,
@@ -168,7 +169,7 @@ sp500 |>
 
 ### `gtsave()`: Save a **gt** table as a file
 
-``` r
+```r
 gtsave(
   data,
   filename,

@@ -1,6 +1,7 @@
 ---
 title: "Using Table Option Functions"
-output: html_document
+format: html
+html-table-processing: none
 ---
 
 ```{r setup, include=FALSE}
@@ -39,7 +40,7 @@ Information function:
 
 ### `opt_footnote_marks()`: Modify the set of footnote marks
 
-``` r
+```r
 opt_footnote_marks(
   data,
   marks
@@ -82,7 +83,7 @@ sza |>
 
 ### `opt_row_striping()`: Option to add or remove row striping
 
-``` r
+```r
 opt_row_striping(
   data,
   row_striping = TRUE
@@ -126,7 +127,7 @@ exibble |>
 
 ### `opt_align_table_header()`: Option to align the table header
 
-``` r
+```r
 opt_align_table_header(
   data,
   align = c("left", "center", "right")
@@ -215,7 +216,7 @@ exibble |>
 
 ### `opt_table_lines()`: Option to set table lines to different extents
 
-``` r
+```r
 opt_table_lines(
   data,
   extent = c("all", "none", "default")
@@ -259,7 +260,7 @@ exibble |>
 
 ### `opt_table_outline()`: Option to wrap an outline around the entire table
 
-``` r
+```r
 opt_table_outline(
   data,
   style = "solid",
@@ -305,7 +306,7 @@ exibble |>
 
 ### `opt_table_font()`: Option to define a custom font for the table
 
-``` r
+```r
 opt_table_font(
   data,
   font,
@@ -362,7 +363,7 @@ sza |>
 
 ### `opt_css()`: Option to add custom CSS for the table
 
-``` r
+```r
 opt_css(
   data,
   css,

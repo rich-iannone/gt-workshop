@@ -1,6 +1,7 @@
 ---
 title: "Practice with Modules 05 and 06"
-output: html_document
+format: html
+html-table-processing: none
 ---
 
 ```{r setup, include=FALSE}

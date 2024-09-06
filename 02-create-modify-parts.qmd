@@ -1,6 +1,7 @@
 ---
 title: "Adding or Modifying Parts of a Table"
-output: html_document
+format: html
+html-table-processing: none
 ---
 
 ```{r setup, include=FALSE}
@@ -61,7 +62,7 @@ Helpers for defining styles (only for `tab_style()`):
 
 ### `tab_header()`: Add a table header
 
-``` r
+```r
 tab_header(
   data,
   title,
@@ -91,7 +92,7 @@ gtcars |>
 
 ### `tab_stubhead()`: Add label text to the stubhead
 
-``` r
+```r
 tab_stubhead(
   data,
   label
@@ -116,7 +117,7 @@ gtcars |>
 
 ### `tab_spanner()`: Add a spanner column label
 
-``` r
+```r
 tab_spanner(
   data,
   label,
@@ -199,7 +200,7 @@ gtcars_small |>
 
 ### `tab_row_group()`: Add a row group to a **gt** table
 
-``` r
+```r
 tab_row_group(
   data,
   label,
@@ -269,7 +270,7 @@ gtcars |>
 
 ### `tab_source_note()`: Add a source note citation
 
-``` r
+```r
 tab_source_note(
   data,
   source_note
@@ -294,7 +295,7 @@ exibble |>
 
 ### `tab_footnote()`: Add a table footnote
 
-``` r
+```r
 tab_footnote(
   data,
   footnote,
@@ -336,7 +337,7 @@ exibble |>
 
 ### `tab_style()`: Add custom styles to one or more cells
 
-``` r
+```r
 tab_style(
   data,
   style,
@@ -442,7 +443,7 @@ sp500 |>
 
 ### `tab_options()`: Modify the table output options
 
-``` r
+```r
 tab_options(
   data,
   container.width = NULL,
