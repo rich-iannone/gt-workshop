@@ -102,6 +102,17 @@ exibble |>
   gt(rowname_col = "row", groupname_col = "group")
 ```
 
+There is another way to arrange group and row labels: put them side by side in the stub. You can do this with `row_group_as_column = TRUE`.
+
+```{r}
+exibble |>
+  gt(
+    rowname_col = "row",
+    groupname_col = "group",
+    row_group_as_column = TRUE
+  )
+```
+
 Say you have a data frame with row names (like `mtcars`). You can put those `row.names` in the stub with `rownames_to_stub = TRUE`:
 
 ```{r}
